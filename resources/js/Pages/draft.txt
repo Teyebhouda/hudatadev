@@ -1,0 +1,200 @@
+<template>
+  <section ref="contactSection" id="contact-form" class="bg-white relative py-16 px-4 md:px-20 font-sans">
+    <!-- Image de fond floue -->
+    <div
+      class="absolute inset-0 bg-cover bg-center opacity-30 blur-sm z-0"
+      style="background-image: url('/images/logo.jpeg');"
+    ></div>
+
+    <div class="absolute inset-0 bg-white bg-opacity-60 z-0"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+      
+      <!-- Formulaire -->
+      <div class="md:col-span-2 bg-[#F8F9FB] p-10 rounded-xl shadow-md backdrop-blur-sm">
+        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-[#1B2B50]">
+          Demande un devis
+        </h2>
+        <form @submit.prevent="submitForm" class="space-y-6">
+          <!-- Nom -->
+          <div>
+            <label class="block text-gray-700 mb-1" for="nom">Nom complet</label>
+            <input
+              id="nom"
+              v-model="form.nom"
+              type="text"
+              placeholder="Jean Dupont"
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
+              required
+            />
+          </div>
+
+          <!-- Email / Téléphone -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-gray-700 mb-1" for="email">Email</label>
+              <input
+                id="email"
+                v-model="form.email"
+                type="email"
+                placeholder="jean@example.com"
+                class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-1" for="telephone">Téléphone</label>
+              <input
+                id="telephone"
+                v-model="form.telephone"
+                type="tel"
+                placeholder="+33 6 12 34 56 78"
+                class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Service -->
+          <div>
+            <label class="block text-gray-700 mb-1" for="service">Service souhaité</label>
+            <select
+              id="service"
+              v-model="form.service"
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
+              required
+            >
+              <option disabled value="">— Choisissez un service —</option>
+              <option v-for="(item, index) in services" :key="index" :value="item.title">
+                {{ item.title }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block text-gray-700 mb-1" for="message">Votre message</label>
+            <textarea
+              id="message"
+              v-model="form.message"
+              placeholder="Décrivez votre projet en quelques lignes..."
+              rows="5"
+              class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition resize-none"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Bouton -->
+          <button
+            type="submit"
+            class="w-full bg-[#1B2B50] text-white font-semibold py-3 rounded-lg hover:bg-[#14213d] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="loading"
+          >
+            {{ loading ? 'Envoi en cours...' : 'Envoyer la demande' }}
+          </button>
+        </form>
+      </div>
+
+      <!-- Coordonnées -->
+      <div class="bg-[#F8F9FB] p-10 rounded-xl shadow-md backdrop-blur-sm">
+        <h2 class="text-2xl font-bold mb-6 text-[#1B2B50]">{{ content.title }}</h2>
+        <p class="text-gray-600 mb-6">
+          {{ content.description || 'Nous vous répondrons dans les meilleurs délais.' }}
+        </p>
+        <ul class="space-y-4 text-gray-700">
+          <li><span class="font-semibold">Entreprise :</span> {{ content.entreprise }}</li>
+          <li><span class="font-semibold">Email :</span> {{ content.email }}</li>
+          <li><span class="font-semibold">Téléphone :</span> {{ content.phone }}</li>
+          <li><span class="font-semibold">Adresse :</span> {{ content.adress }}</li>
+        </ul>
+        <div class="flex space-x-4 mt-8 text-2xl text-[#1B2B50]">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Modale personnalisée -->
+  <div
+    v-if="showModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center">
+      <h2 class="text-xl font-bold mb-4 text-[#1B2B50]">Message</h2>
+      <p class="mb-6 text-gray-700">{{ modalMessage }}</p>
+      <button
+        @click="closeModal"
+        class="bg-[#1B2B50] text-white px-6 py-2 rounded-lg hover:bg-[#14213d] transition"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { reactive, ref, watch } from 'vue'
+import axios from 'axios'
+
+const props = defineProps({
+  initialService: { type: String, default: '' },
+  content: { type: Object, default: () => ({}) },
+  services: { type: Array, default: () => [] }
+})
+
+const form = reactive({
+  nom: '',
+  email: '',
+  telephone: '',
+  service: props.initialService,
+  message: ''
+})
+
+const loading = ref(false)
+const showModal = ref(false)
+const modalMessage = ref('')
+
+watch(
+  () => props.initialService,
+  (newVal) => { form.service = newVal }
+)
+
+const submitForm = async () => {
+  loading.value = true
+  try {
+    const response = await axios.post(
+      route('contact.send'),
+      form,
+      {
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      }
+    )
+
+    if (response.data.success) {
+      modalMessage.value = response.data.message || 'Demande envoyée avec succès'
+      showModal.value = true
+      Object.keys(form).forEach(key => form[key] = '')
+    } else {
+      modalMessage.value = 'Une erreur est survenue.'
+      showModal.value = true
+    }
+  } catch (error) {
+    if (error.response?.status === 401) {
+      modalMessage.value = "Vous n'êtes pas autorisé à effectuer cette action."
+    } else {
+      modalMessage.value = 'Une erreur est survenue.'
+    }
+    showModal.value = true
+  } finally {
+    loading.value = false
+  }
+}
+
+const closeModal = () => {
+  showModal.value = false
+}
+</script>
