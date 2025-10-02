@@ -1,84 +1,91 @@
 <template>
   <form class="space-y-6">
+    <div class="text-center">
+      <input v-model="localForm.title" type="text" placeholder="Titre de la section" class="input text-4xl font-extrabold mb-2 w-full text-center" />
+      <input v-model="localForm.subtitle" type="text" placeholder="Sous-titre de la section" class="input text-lg mb-4 w-full text-center" />
+      <textarea v-model="localForm.description" type="text" rows="3"
+        class="w-full border rounded p-2 focus:ring focus:ring-blue-300"
+        placeholder="Une description courte de la section"  />
+    </div>
     <!-- Section: Services -->
-    <div v-for="(item, index) in localForm.items" :key="index" class="border rounded-lg mb-4 bg-white shadow-md">
-      <!-- Titre cliquable -->
-      <div
-        class="flex justify-between items-center p-4 bg-gray-100 cursor-pointer"
-        @click="toggleService(index)"
-      >
-        <span class="font-semibold text-lg">{{ item.title || 'Service' }}</span>
-        <span class="text-xl">{{ expandedIndex === index ? '−' : '+' }}</span>
+   
+    <!-- Liste des services existants -->
+    <div>
+      <h3 class="font-semibold mb-2">Choisir les services à afficher</h3>
+
+      <!-- ✅ Case tout sélectionner -->
+      <div class="flex items-center mb-3">
+        <input
+          type="checkbox"
+          :checked="allSelected"
+          @change="toggleAll"
+          class="mr-2"
+        />
+        <span class="font-medium">Tout sélectionner</span>
       </div>
 
-      <!-- Champs visibles si déplié -->
-      <div v-show="expandedIndex === index" class="p-4 space-y-4">
-        <input v-model="item.title" type="text" placeholder="Titre" class="input" />
-        <textarea v-model="item.description" rows="2" placeholder="Description courte" class="input" />
-
-        <!-- ✅ Description longue en HTML -->
-        <div>
-          <label class="block font-semibold mb-1">Description longue (HTML)</label>
-          <QuillEditor
-            v-model:content="item.longDescription"
-            contentType="html"
-            theme="snow"
-            class="bg-white rounded shadow h-[150px] resize-y overflow-auto"
-          />
-        </div>
-
-        <!-- Sélecteur d'icône -->
-        <IconSelector v-model="item.icon" />
-
-        <button class="text-red-600" type="button" @click="removeItem(index)">
-          Supprimer ce service
-        </button>
+      <!-- ✅ Sécurisé pour éviter undefined.id -->
+      <div
+        v-for="service in allServices"
+        :key="service.id"
+        class="flex items-center mb-2"
+      >
+        <input
+          type="checkbox"
+          :value="Number(service.id)"
+          v-model="localForm.services_ids"
+          class="mr-2"
+        />
+        <span>{{ service.title }}</span>
       </div>
     </div>
-
-    <button type="button" class="btn-secondary" @click="addItem">+ Ajouter un service</button>
   </form>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import IconSelector from '@/Components/IconSelector.vue'
+import { reactive, watch, computed } from 'vue'
 
-const props = defineProps({ form: Object })
-const emit = defineEmits(['update:form'])
-const localForm = computed({
-  get: () => props.form,
-  set: value => emit('update:form', value)
+const props = defineProps({
+  form: { type: Object, required: true },
+  allServices: { type: Array, default: () => [] },
 })
 
-const expandedIndex = ref(null)
-const toggleService = index => {
-  expandedIndex.value = expandedIndex.value === index ? null : index
+const emit = defineEmits(['update:form'])
+
+// Initialisation unique
+const localForm = reactive({
+  title: props.form.title || '',
+  subtitle: props.form.subtitle || '',
+  services_ids: Array.isArray(props.form.services_ids)
+    ? props.form.services_ids.map(Number)
+    : [],
+})
+
+// Vérifie si tout est sélectionné
+const allSelected = computed(() =>
+  props.allServices.length > 0 &&
+  localForm.services_ids.length === props.allServices.length
+)
+
+// Action tout sélectionner / tout décocher
+const toggleAll = () => {
+  if (allSelected.value) {
+    localForm.services_ids = []
+  } else {
+    localForm.services_ids = props.allServices.map(s => Number(s.id))
+  }
 }
 
-function addItem() {
-  if (!Array.isArray(localForm.value.items)) localForm.value.items = []
-  localForm.value.items.push({ title: '', description: '', longDescription: '', icon: '' })
-}
+// Synchronisation locale → parent (fusion propre)
+watch(
+  localForm,
+  (newVal) => {
+    for (const key in newVal) {
+      emit('update:form', { [key]: newVal[key] })
+    }
+  },
+  { deep: true }
+)
 
-function removeItem(index) {
-  localForm.value.items.splice(index, 1)
-  if (expandedIndex.value === index) expandedIndex.value = null
-}
 </script>
 
-<style scoped>
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.375rem;
-  font-size: 1rem;
-}
-.btn-secondary {
-  background-color: #f3f4f6;
-  color: #111827;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-}
-</style>

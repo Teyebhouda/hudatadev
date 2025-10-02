@@ -7,11 +7,14 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 import ToastPlugin from 'vue-toast-notification';
 // Import one of the available themes
 //import 'vue-toast-notification/dist/theme-default.css';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
+AOS.init();
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

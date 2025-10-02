@@ -13,6 +13,7 @@ import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { ref, onMounted } from 'vue'
 import ParallaxStats from './Components/parallaxStats.vue'
+import Topbar from './Components/Topbar.vue'
 
 const props = defineProps({
   projectsData: {
@@ -21,6 +22,8 @@ const props = defineProps({
   }
 })
 const projects = ref(props.projectsData)
+const footerPages = computed(() => page.props.footerPages) // ✅ dispo direct
+
 console.log('projectsdata', projects.value)
 
 const contactSection = ref(null)
@@ -37,6 +40,11 @@ const scrollToContact = (serviceName) => {
   }
 }
 
+
+
+const handleSelectService = (serviceId) => {
+  selectedService.value = serviceId
+}
 
 
 const page = usePage()
@@ -58,16 +66,28 @@ console.log('servicesitems', services.value)
 </script>
 <template>
   <div class="min-h-screen flex flex-col text-gray-800">
-    <!-- Header -->
-   <Navbar :services="services" />
- 
+   
 
+    <!-- Header -->
+   
+   <Navbar :services="services" :projects="projects" />
+ 
     <!-- Contenu -->
-  <main class="flex-1">
-     <Hero :content="heroContent" />
-     <!-- <AboutUs :content="aboutUsContent" />  -->
-     <Services  :content="servicesContent" :scrollToContact="scrollToContact"/>
-      <ParallaxStats :content="parallaxStatsContent"   />
+<main class="flex-1">
+
+    <Hero
+  :content="heroContent"
+  :services="services"
+  @selectService="handleSelectService"
+/>
+<div class="my-16"></div>
+ <ParallaxStats :content="parallaxStatsContent"   />
+<Services
+  :content="servicesContent"
+  :scrollToContact="scrollToContact"
+  :initialService="selectedService"
+/>
+     
        <!-- <whyChooseUs :content="whyChooseUsContent" /> -->
       <!-- <Testimonials :content="testimonialsContent"/> -->
       <Ourprojects :content="projects" />
@@ -76,8 +96,7 @@ console.log('servicesitems', services.value)
     </main>
 
     <!-- Footer -->
-    <Footer />
-  
+    <Footer :footerPages="footerPages" />  
   </div>
 
 

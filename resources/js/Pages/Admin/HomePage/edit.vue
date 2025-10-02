@@ -13,6 +13,7 @@ import ServicesForm from './Partiels/Services.vue'
 import TestimonialsForm from './Partiels/Testimonials.vue'
 import AboutUs from './Partiels/AboutUs.vue'
 import ParallaxStatsForm from './Partiels/ParallaxStatsForm.vue'
+import ProjectsForm from './Partiels/Projects.vue'
 import { toRaw } from 'vue'
 
 
@@ -21,6 +22,7 @@ import { toRaw } from 'vue'
 const props = defineProps({
   sections: Object,
   settings: Object,
+  allServices: Array,
 
 })
 
@@ -34,7 +36,8 @@ const form = reactive({})
 // Associer les clés de section à leurs composants respectifs
 const sectionComponents = {
   hero: HeroSectionForm,
-  services: ServicesForm, 
+  services: ServicesForm,
+  projects: ProjectsForm,
   whyChooseUs: whyChooseUsForm,
   testimonials: TestimonialsForm,
   contact: ContactForm,
@@ -151,6 +154,7 @@ function formatLabel(key) {
     contact: 'Infos de l\'entreprise',
     WhyChooseUs: 'Purquoi nous choisir',
     services: 'Services',
+    projects: 'Projets',
     testimonials: 'Témoignages',
     aboutus: 'À propos de nous',
    parallaxStats: 'Section Parallax (statistiques)',
@@ -187,11 +191,16 @@ function formatLabel(key) {
 
         <form @submit.prevent="submit">
           <!-- Chargement du bon composant selon la section -->
-          <component
-            :is="sectionComponents[activeSection]"
-            v-model:form="form"
-             v-bind="activeSection === 'contact' ? { settings } : {}"
-          />
+         
+ <component
+  :is="sectionComponents[activeSection]"
+  :form="form"
+  @update:form="Object.assign(form, $event)"  
+  :allServices="props.allServices"
+  :allProjects="props.AllProjects"
+  v-bind="activeSection === 'contact' ? { settings } : {}"
+/>
+
 
           <button
             type="submit"

@@ -1,200 +1,179 @@
 <template>
-  <section ref="contactSection" id="contact-form" class="bg-white relative py-16 px-4 md:px-20 font-sans">
-    <!-- Image de fond floue -->
+  <header class="sticky top-0 z-50">
+
+    <!-- ✅ Topbar -->
     <div
-      class="absolute inset-0 bg-cover bg-center opacity-30 blur-sm z-0"
-      style="background-image: url('/images/logo.jpeg');"
-    ></div>
+      class="topbar hidden md:block fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
+      :class="[isCompact ? 'py-1 h-14' : 'py-4 h-24']"
+    >
+      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm md:text-base">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <img
+            :src="$page.props.settings?.logo"
+            alt="Logo"
+            class="object-contain drop-shadow-sm transition-all duration-300"
+            :class="isCompact ? 'h-8' : 'h-12'"
+          />
+        </div>
 
-    <div class="absolute inset-0 bg-white bg-opacity-60 z-0"></div>
-
-    <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
-      
-      <!-- Formulaire -->
-      <div class="md:col-span-2 bg-[#F8F9FB] p-10 rounded-xl shadow-md backdrop-blur-sm">
-        <h2 class="text-3xl md:text-4xl font-bold mb-8 text-[#1B2B50]">
-          Demande un devis
-        </h2>
-        <form @submit.prevent="submitForm" class="space-y-6">
-          <!-- Nom -->
-          <div>
-            <label class="block text-gray-700 mb-1" for="nom">Nom complet</label>
-            <input
-              id="nom"
-              v-model="form.nom"
-              type="text"
-              placeholder="Jean Dupont"
-              class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
-              required
-            />
+        <!-- Contact Info (desktop only) -->
+        <div class="hidden md:flex flex-wrap gap-6 justify-end text-gray-600 text-xs md:text-sm">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-envelope text-primary"></i>
+            <a :href="`mailto:${$page.props.settings?.email}`" class="hover:text-primary font-medium">
+              {{ $page.props.settings?.email }}
+            </a>
           </div>
-
-          <!-- Email / Téléphone -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-gray-700 mb-1" for="email">Email</label>
-              <input
-                id="email"
-                v-model="form.email"
-                type="email"
-                placeholder="jean@example.com"
-                class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
-                required
-              />
-            </div>
-            <div>
-              <label class="block text-gray-700 mb-1" for="telephone">Téléphone</label>
-              <input
-                id="telephone"
-                v-model="form.telephone"
-                type="tel"
-                placeholder="+33 6 12 34 56 78"
-                class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
-                required
-              />
-            </div>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-phone text-primary"></i>
+            <a :href="`tel:${$page.props.settings?.phone}`" class="hover:text-primary font-medium">
+              {{ $page.props.settings?.phone }}
+            </a>
           </div>
-
-          <!-- Service -->
-          <div>
-            <label class="block text-gray-700 mb-1" for="service">Service souhaité</label>
-            <select
-              id="service"
-              v-model="form.service"
-              class="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition"
-              required
-            >
-              <option disabled value="">— Choisissez un service —</option>
-              <option v-for="(item, index) in services" :key="index" :value="item.title">
-                {{ item.title }}
-              </option>
-            </select>
+          <div class="flex items-center gap-2">
+            <i class="fas fa-map-marker-alt text-primary"></i>
+            <span class="font-medium">{{ $page.props.settings?.adress }}</span>
           </div>
-
-          <!-- Message -->
-          <div>
-            <label class="block text-gray-700 mb-1" for="message">Votre message</label>
-            <textarea
-              id="message"
-              v-model="form.message"
-              placeholder="Décrivez votre projet en quelques lignes..."
-              rows="5"
-              class="w-full border border-gray-300 rounded-lg px-4 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1B2B50] transition resize-none"
-              required
-            ></textarea>
-          </div>
-
-          <!-- Bouton -->
-          <button
-            type="submit"
-            class="w-full bg-[#1B2B50] text-white font-semibold py-3 rounded-lg hover:bg-[#14213d] transition disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="loading"
-          >
-            {{ loading ? 'Envoi en cours...' : 'Envoyer la demande' }}
-          </button>
-        </form>
-      </div>
-
-      <!-- Coordonnées -->
-      <div class="bg-[#F8F9FB] p-10 rounded-xl shadow-md backdrop-blur-sm">
-        <h2 class="text-2xl font-bold mb-6 text-[#1B2B50]">{{ content.title }}</h2>
-        <p class="text-gray-600 mb-6">
-          {{ content.description || 'Nous vous répondrons dans les meilleurs délais.' }}
-        </p>
-        <ul class="space-y-4 text-gray-700">
-          <li><span class="font-semibold">Entreprise :</span> {{ content.entreprise }}</li>
-          <li><span class="font-semibold">Email :</span> {{ content.email }}</li>
-          <li><span class="font-semibold">Téléphone :</span> {{ content.phone }}</li>
-          <li><span class="font-semibold">Adresse :</span> {{ content.adress }}</li>
-        </ul>
-        <div class="flex space-x-4 mt-8 text-2xl text-[#1B2B50]">
-          <a href="#"><i class="fab fa-facebook"></i></a>
-          <a href="#"><i class="fab fa-linkedin"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- ✅ Modale personnalisée -->
-  <div
-    v-if="showModal"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-  >
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center">
-      <h2 class="text-xl font-bold mb-4 text-[#1B2B50]">Message</h2>
-      <p class="mb-6 text-gray-700">{{ modalMessage }}</p>
-      <button
-        @click="closeModal"
-        class="bg-[#1B2B50] text-white px-6 py-2 rounded-lg hover:bg-[#14213d] transition"
-      >
-        OK
-      </button>
-    </div>
-  </div>
+    <!-- ✅ Navbar -->
+    <nav
+      class="navbar fixed w-full bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm z-40 transition-transform duration-300"
+    :class="[
+  isHidden ? '-translate-y-full' : 'translate-y-0',
+  isCompact ? 'top-14 md:top-14' : 'top-14 md:top-24'
+]"
+
+    >
+      <div class="container mx-auto px-4 md:px-16 py-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+
+        <!-- Ligne 1 : Logo + hamburger -->
+        <div class="flex w-full items-center justify-between md:hidden">
+          <img
+            :src="$page.props.settings?.logo"
+            alt="Logo"
+            class="h-10 object-contain"
+          />
+          <button
+            @click="toggleMenu"
+            class="text-primary text-3xl"
+            aria-label="Toggle menu"
+          >
+            <i :class="isMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
+          </button>
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-8 font-semibold text-gray-700 tracking-wide">
+          <a href="/" class="hover:text-primary transition">Accueil</a>
+          <Dropdown :items="services" title="Services" :slugify="slugify" />
+          <Dropdown :items="projects" title="Projets" :slugify="slugify" />
+          <a href="#contact-form" class="hover:text-primary transition">Contact</a>
+          <a href="/about" class="hover:text-primary transition">À propos</a>
+        </div>
+
+        <!-- Bouton "Demander un devis" (mobile ET desktop) -->
+        <div class="w-full md:w-auto">
+          <a
+            href="#contact-form"
+            class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-3 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
+          >
+          Nous contacter 
+          </a>
+        </div>
+      </div>
+
+      <!-- ✅ Mobile Menu Dropdown -->
+      <transition name="slide-fade">
+        <div
+          v-if="isMenuOpen"
+          class="md:hidden bg-white/95 backdrop-blur-md shadow-lg px-6 py-6 flex flex-col gap-4 font-semibold text-gray-700"
+        >
+          <a href="/" class="hover:text-primary transition">Accueil</a>
+          <MobileDropdown :items="services" title="Services" :slugify="slugify" />
+          <MobileDropdown :items="projects" title="Projets" :slugify="slugify" />
+          <a href="#contact-form" class="hover:text-primary transition">Contact</a>
+          <a href="/about" class="hover:text-primary transition">À propos</a>
+        </div>
+      </transition>
+    </nav>
+  </header>
 </template>
 
 <script setup>
-import { reactive, ref, watch } from 'vue'
-import axios from 'axios'
+import Dropdown from './Dropdown.vue'
+import MobileDropdown from './MobileDropdown.vue'
+import { useScrollHide } from '@/useScrollHide'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
-  initialService: { type: String, default: '' },
-  content: { type: Object, default: () => ({}) },
-  services: { type: Array, default: () => [] }
+  services: Array,
+  projects: Array,
 })
 
-const form = reactive({
-  nom: '',
-  email: '',
-  telephone: '',
-  service: props.initialService,
-  message: ''
-})
+const isMenuOpen = ref(false)
+const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value)
 
-const loading = ref(false)
-const showModal = ref(false)
-const modalMessage = ref('')
+const { isHidden } = useScrollHide()
+const isCompact = ref(false)
 
-watch(
-  () => props.initialService,
-  (newVal) => { form.service = newVal }
-)
-
-const submitForm = async () => {
-  loading.value = true
-  try {
-    const response = await axios.post(
-      route('contact.send'),
-      form,
-      {
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-      }
-    )
-
-    if (response.data.success) {
-      modalMessage.value = response.data.message || 'Demande envoyée avec succès'
-      showModal.value = true
-      Object.keys(form).forEach(key => form[key] = '')
-    } else {
-      modalMessage.value = 'Une erreur est survenue.'
-      showModal.value = true
-    }
-  } catch (error) {
-    if (error.response?.status === 401) {
-      modalMessage.value = "Vous n'êtes pas autorisé à effectuer cette action."
-    } else {
-      modalMessage.value = 'Une erreur est survenue.'
-    }
-    showModal.value = true
-  } finally {
-    loading.value = false
-  }
+const handleScroll = () => {
+  isCompact.value = window.scrollY > 40
 }
 
-const closeModal = () => {
-  showModal.value = false
-}
+onMounted(() => window.addEventListener('scroll', handleScroll))
+onUnmounted(() => window.removeEventListener('scroll', handleScroll))
+
+const slugify = (text) =>
+  text
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+    .replace(/^-+|-+$/g, '')
 </script>
+
+<style scoped>
+.navbar {
+  transition: height 0.3s ease;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.text-primary {
+  color: #1363ab;
+}
+
+.topbar {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.h-24 {
+  height: 6rem;
+}
+.h-14 {
+  height: 3.5rem;
+}
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+</style>

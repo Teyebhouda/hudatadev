@@ -9,6 +9,8 @@ use App\Http\Controllers\FrontHomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\Admin\ProjectController;
 
 
 
@@ -24,11 +26,6 @@ Route::get('/test-email', function () {
 });
 
 
-Route::get('/', [
-    FrontHomeController::class, 'index'
-])->name('front.home');
-Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
-
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -42,20 +39,35 @@ Route::middleware('auth')->group(function () {
     Route::get('/home/edit/{sectionKey}', [HomeController::class, 'edit'])->name('home.edit');
  // Add admin.homepage.update route for Ziggy compatibility
     Route::put('/admin/homePage/{sectionKey}/update', [HomeController::class, 'update'])->name('admin.homepage.update');
-   Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::get('/pages', [PagesController::class, 'index'])->name('pages');
+    //Route::get('/pages/edit/{pageId}', [PagesController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{pageId}/update', [PagesController::class, 'update'])->name('pages.update');
+Route::get('/pages/create', [PagesController::class, 'create'])->name('pages.create');
+    Route::post('/pages/store', [PagesController::class, 'store'])->name('pages.store');
+    Route::delete('/pages/{pageId}/delete', [PagesController::class, 'destroy'])->name('pages.destroy');
+Route::get('/pages/{id}/edit', [PagesController::class, 'edit'])->name('pages.edit');
+  
+    Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
+   Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 //Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
- Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
-    Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class);
-    
-  Route::get('/services.create', [\App\Http\Controllers\Admin\ServiceController::class, 'create'])->name('services.create');
+ Route::resource('services', ServiceController::class);
+   Route::post('/admin/services/batch-update', [ServiceController::class, 'batchUpdate'])->name('services.batch-update');
+    Route::resource('projects', ProjectController::class);
+    Route::get('/admin/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+Route::post('/admin/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/admin/api/projects', [ProjectController::class, 'apiIndex'])->name('admin.projects.api');
+Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
 
-    Route::get('/services.edit/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'edit'])->name('services.edit');
-    Route::put('/services.update/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'update'])->name('services.update');
-    Route::delete('/services.destroy/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'destroy'])->name('services.destroy');
-    Route::get('/services.index', [\App\Http\Controllers\Admin\ServiceController::class, 'index'])->name('services.index');
-    Route::get('/services.show/{service}', [\App\Http\Controllers\Admin\ServiceController::class, 'show'])->name('services.show');
-   
    });
+   
+Route::get('/', [
+    FrontHomeController::class, 'index'
+])->name('front.home');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
+Route::get('/projects', [ProjectController::class, 'frontIndex'])->name('projects.index');
+Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
+Route::get('/pages/{slug}', [PagesController::class, 'show'])->name('pages.show');
+
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 
 

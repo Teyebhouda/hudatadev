@@ -19,11 +19,16 @@ const services = computed(() => page.props.sections?.services?.content?.items ||
   <div class="min-h-screen flex flex-col text-gray-800">
     <!-- Header -->
     <Navbar />
+    <br />
+    <br />
+    <br />
 
     <!-- Contenu principal -->
     <main class="flex-1">
+      
       <!-- Détail du service -->
       <section class="bg-white py-24 px-4 md:px-12 lg:px-24">
+        
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <!-- Texte -->
           <div>
@@ -35,8 +40,8 @@ const services = computed(() => page.props.sections?.services?.content?.items ||
             </p>
              <div
             class="prose max-w-none text-gray-800 prose-headings:text-[#1B2B50]"
-            v-if="service.longDescription"
-            v-html="service.longDescription"
+            v-if="service.long_description"
+            v-html="service.long_description"
           ></div>
 
             <!-- Bouton vers formulaire -->
@@ -49,7 +54,8 @@ const services = computed(() => page.props.sections?.services?.content?.items ||
          <div class="flex justify-center md:justify-end">
   <!-- Image statique symbolique à la place de l'icône dynamique -->
   <img
-    src="/images/accompagnement-symbolique.png"
+  :src="service.background_image || '/images/worker-silhouette.png'"
+  :alt="`Illustration pour ${service.title}`"
     class="w-full h-64 md:h-96 object-cover rounded-xl shadow-lg"
             loading="lazy"
    

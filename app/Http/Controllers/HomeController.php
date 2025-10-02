@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Laravel\Facades\Image;
+use App\Models\Project;
+use App\Models\Service;
 
 
 class HomeController extends Controller
@@ -33,13 +35,35 @@ class HomeController extends Controller
     return [$section->section_key => $content];
 })->toArray();
 
+
         return [$section->section_key => $content];
     })->toArray();
-    
 
-    return Inertia::render('Admin/HomePage/edit', [
-        'sections' => $sections,
-    ]);    
+     $allServices = Service::select('id', 'title')->get();
+
+    
+// Récupérer les projets sélectionnés
+$projectIds = collect($sections['projects']['project_ids'] ?? [])
+    ->filter(function ($id) {
+        return Project::where('id', $id)->exists();
+    })
+    ->values()
+    ->all();
+   // dd($projectIds);
+
+$projects = \App\Models\Project::with('images')
+    ->whereIn('id', $projectIds)
+    ->latest()
+    ->get();
+
+
+
+return Inertia::render('Admin/HomePage/edit', [
+    'sections' => $sections,
+    'AllProjects' => $projects,
+    'allServices' => $allServices,
+]);   
+
     }
 
     public function edit($sectionKey)
@@ -56,9 +80,15 @@ class HomeController extends Controller
 
 public function update(Request $request, $sectionKey)
 {
-   // dd($request->all(), $sectionKey);
+   // dd($request->all(), $sectionKey, $request->project_ids);
+if ($sectionKey === 'projects' && isset($data['project_ids'])) {
+    $request['project_ids'] = array_values(
+        \App\Models\Project::whereIn('id', $request['project_ids'])->pluck('id')->toArray()
+    );
+}
     $data = $this->getValidatedData($request, $sectionKey);
 
+//dd($data['project_ids']);
     foreach (['background_imageFile', 'imageFile'] as $fileField) {
     if ($request->hasFile($fileField) && $request->file($fileField)->isValid()) {
         $file = $request->file($fileField);
@@ -210,18 +240,14 @@ private function processFilesRecursive(array $data, Request $request, $parentKey
         'steps.*.description' => 'required|string|max:500',
     ]);
 
-        case 'services':
-
-            return $request->validate([
-                'title' => 'required|string|max:255',
-                'subtitle' => 'nullable|string',
-                'items' => 'nullable|array',
-                'items.*.title' => 'required|string|max:1000',
-                'items.*.description' => 'nullable|string|max:2000',
-                'items.*.longDescription' => 'nullable|string|max:10000',
-                'items.*.icon' => 'required|string|max:500',
-                
-            ]);
+          case 'services':
+    return $request->validate([
+        'title' => 'required|string|max:255',
+        'subtitle' => 'nullable|string|max:500',
+        'description' => 'nullable|string|max:2000',
+        'services_ids' => 'nullable|array',
+        'services_ids.*' => 'exists:services,id', // chaque ID doit exister
+    ]);
 
         case 'testimonials':
             return $request->validate([
@@ -272,7 +298,15 @@ case 'contact':
         'stats.*.label' => 'required_with:stats|string|max:255',
     ]);
 
-             
+        case 'projects':
+    return $request->validate([
+        'title' => 'nullable|string|max:255',
+        'subtitle' => 'nullable|string|max:500',
+        'description' => 'nullable|string|max:2000',
+        'project_ids' => 'nullable|array',
+        'project_ids.*' => 'exists:projects,id',
+    ]);
+     
 
 
 

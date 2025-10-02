@@ -58,6 +58,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Services
                                 </navLink>
+                                 <navLink
+                                    :href="route('pages')"
+                                    :active="route().current('pages')"
+                                >
+                                    Pages
+                                </navLink>
                                 <navLink
                                     :href="route('settings.edit')"
                                     :active="route().current('settings.edit')"
