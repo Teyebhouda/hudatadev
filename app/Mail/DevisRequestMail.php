@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ContactRequestMail extends Mailable
+class DevisRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,9 +19,9 @@ class ContactRequestMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Nouvelle demande de contact')
-                    ->markdown('emails.contact.requestmessage');
+        return $this->subject('Nouvelle demande de devis')
+                    ->markdown('emails.contact.request');
     }
 
-
+    
 }

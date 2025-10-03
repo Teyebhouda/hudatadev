@@ -16,8 +16,9 @@ const form = useForm({
 })
 
 const previews = ref([])
-
+const processing = ref(false)
 const submit = () => {
+   processing.value = true
   const formData = new FormData()
   formData.append("title", form.title)
   formData.append("description", form.description)
@@ -32,6 +33,9 @@ const submit = () => {
   form.post(route('projects.store'), {
     data: formData,
     forceFormData: true,
+     onFinish: () => {
+      processing.value = false
+    }
   })
 }
 
@@ -95,12 +99,13 @@ const removeFile = (index) => {
       <input v-model="form.meta_description" type="text" placeholder="SEO Description" class="w-full border rounded p-2" />
       <input v-model="form.meta_keywords" type="text" placeholder="SEO Keywords (comma separated)" class="w-full border rounded p-2" />
 <div class="flex gap-4 mt-6">
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-        Enregistrer
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" :disabled="processing">
+        {{ processing ? 'Enregistrement...' : 'Enregistrer' }}
       </button>
       <button
         type="button"
         class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        
         @click="$inertia.visit(route('projects.index'))"
       > Annuler</button> 
       </div>

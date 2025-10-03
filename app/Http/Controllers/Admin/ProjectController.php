@@ -33,7 +33,7 @@ class ProjectController extends Controller
             'content' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'date' => 'nullable|date',
-            'images.*' => 'file|mimes:jpeg,png,jpg,avif|max:2048',
+            'images.*' => 'file|mimes:jpeg,png,jpg,avif,webp|max:2048',
 
         ]);
         $request['slug'] = Str::slug($request['title']);
@@ -118,9 +118,29 @@ class ProjectController extends Controller
 }
     public function frontIndex()
 {
-    $projects = Project::with('images')->latest()->get();
+    $sections = HomePageSection::all()->mapWithKeys(function ($section) {
+        $content = $section->content;
+        // Décoder si c'est une chaîne JSON
+        if (is_string($content)) {
+            $content = json_decode($content, true);
+        }
+        return [$section->section_key => ['content' => $content]];
+    })->toArray();
+
+     $projectIds = $sections['projects']['content']['project_ids'] ?? [];
+$projects = Project::with('images')->whereIn('id', $projectIds)->get();
+        $footer = HomePageSection::where('section_key', 'footer')->first();
+
+
     return Inertia::render('Front/Projects/Index', [
-        'projects' => $projects,
+        'projectsData' => $projects,
+         'footer' => $footer,
+           // ✅ SEO dynamique
+        'seo' => [
+            'meta_title' => 'Nos Projets',
+            'meta_description' => 'Découvrez nos projets réalisés, illustrant notre expertise et notre engagement envers la qualité et la satisfaction client.',
+            'meta_keywords' => 'projets, réalisations, construction, rénovation, expertise, qualité, satisfaction client',
+        ],
     ]);
 
 }

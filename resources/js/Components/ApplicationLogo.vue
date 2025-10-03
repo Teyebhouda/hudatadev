@@ -1,7 +1,7 @@
 <template>
      <img
           :src="$page.props.settings?.logo"
-          alt="Logo Administra"
+          alt="Logo FSD Batiment"
             class="h-16 w-auto"
         />
 </template>

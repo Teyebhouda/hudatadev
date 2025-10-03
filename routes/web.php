@@ -53,6 +53,7 @@ Route::get('/pages/{id}/edit', [PagesController::class, 'edit'])->name('pages.ed
  Route::resource('services', ServiceController::class);
    Route::post('/admin/services/batch-update', [ServiceController::class, 'batchUpdate'])->name('services.batch-update');
     Route::resource('projects', ProjectController::class);
+    Route::get('/admin/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/admin/projects/create', [ProjectController::class, 'create'])->name('projects.create');
 Route::post('/admin/projects', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/admin/api/projects', [ProjectController::class, 'apiIndex'])->name('admin.projects.api');
@@ -63,12 +64,14 @@ Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('p
 Route::get('/', [
     FrontHomeController::class, 'index'
 ])->name('front.home');
+Route::get('/contact', [FrontHomeController::class, 'contact'])->name('contact.index');
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
-Route::get('/projects', [ProjectController::class, 'frontIndex'])->name('projects.index');
+Route::get('/projects', [ProjectController::class, 'frontIndex'])->name('allprojects.index');
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/pages/{slug}', [PagesController::class, 'show'])->name('pages.show');
 
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/contact/sendcontact', [ContactController::class, 'sendcontact'])->name('contact.sendcontact');
 
 
 require __DIR__.'/auth.php';

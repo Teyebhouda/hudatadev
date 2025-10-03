@@ -71,18 +71,20 @@
           <a href="#services-section" class="hover:text-primary transition">Services</a>
 
           <Dropdown :items="projects" title="Projets" :slugify="slugify" />
-          <a href="#contact-form" class="hover:text-primary transition">Contact</a>
+          <a :href="`/contact`" class="hover:text-primary transition">Contact</a>
           <a href="#parallax-stats" class="hover:text-primary transition">À propos</a>
         </div>
 
         <!-- Bouton "Demander un devis" (mobile ET desktop) -->
         <div class="w-full md:w-auto">
-          <a
-            href="#contact-form"
-            class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-2 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
-          >
-           Collaborer avec nous
-          </a>
+         <a
+  href="/"
+  @click.prevent="scrollToContact"
+  class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-2 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
+>
+  Collaborer avec nous
+        </a>
+
         </div>
       </div>
 
@@ -97,7 +99,7 @@
           <a href="#services-section" class="hover:text-primary transition">Services</a>
 
           <MobileDropdown :items="projects" title="Projets" :slugify="slugify" />
-          <a href="#contact-form" class="hover:text-primary transition">Contact</a>
+          <a :href="`/contact`" class="hover:text-primary transition">Contact</a>
           <a href="#parallax-stats" class="hover:text-primary transition">À propos</a>
         </div>
       </transition>
@@ -106,15 +108,31 @@
 </template>
 
 <script setup>
+import { Inertia } from '@inertiajs/inertia'
 import Dropdown from './Dropdown.vue'
 import MobileDropdown from './MobileDropdown.vue'
 import { useScrollHide } from '@/useScrollHide'
 import { ref, onMounted, onUnmounted } from 'vue'
 
+
 const props = defineProps({
   services: Array,
   projects: Array,
 })
+const scrollToContact = () => {
+  // Navigate to home page si on n'y est pas
+  if (window.location.pathname !== '/') {
+    Inertia.visit('/', {
+      onSuccess: () => {
+        const el = document.getElementById('contact-form')
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }
+    })
+  } else {
+    const el = document.getElementById('contact-form')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 
 const isMenuOpen = ref(false)
 const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value)

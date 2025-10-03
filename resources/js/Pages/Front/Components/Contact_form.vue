@@ -1,7 +1,6 @@
 <template>
   <section
     class="relative bg-center bg-cover bg-fixed contact-section py-16 px-4 sm:py-20 sm:px-8 lg:px-12"
-    :class="{ 'lg:bg-fixed': true }"
     role="region"
     aria-labelledby="contact-title"
     ref="contactSection"
@@ -27,7 +26,7 @@
         </p>
       </div>
 
-      <!-- Bloc droit (formulaire) avec scroll -->
+      <!-- Bloc droit (formulaire) -->
       <div class="overflow-y-auto max-h-[90vh] lg:max-h-none pr-1">
         
         <!-- Étape 0 -->
@@ -41,7 +40,7 @@
           </button>
         </div>
 
-        <!-- Étape 1 -->
+        <!-- Étape 1 : choix service -->
         <transition name="fade" mode="out-in">
           <div v-if="step === 1" class="space-y-6 sm:space-y-8 pb-10">
             <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Quel type de projet ?</h3>
@@ -61,6 +60,7 @@
                 {{ type.title }}
               </button>
             </div>
+            <p v-if="errors.service" class="text-red-500 text-sm mt-1">{{ errors.service }}</p>
             <div class="text-right mt-4 sm:mt-6">
               <button
                 :disabled="!form.service"
@@ -73,7 +73,7 @@
           </div>
         </transition>
 
-        <!-- Étape 2 -->
+        <!-- Étape 2 : message projet -->
         <transition name="fade" mode="out-in">
           <div v-if="step === 2" class="space-y-6 sm:space-y-8 pb-10">
             <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Parlez-nous de votre projet</h3>
@@ -82,9 +82,9 @@
               rows="5"
               placeholder="Décrivez votre projet ici..."
               class="w-full p-4 sm:p-5 rounded-xl bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-secondary/30 transition"
-              required
-              aria-required="true"
+              @blur="validateField('message')"
             ></textarea>
+            <p v-if="errors.message" class="text-red-500 text-sm mt-1">{{ errors.message }}</p>
             <div class="flex justify-between items-center mt-2 sm:mt-4">
               <button
                 @click="step--"
@@ -103,15 +103,52 @@
           </div>
         </transition>
 
-        <!-- Étape 3 -->
+        <!-- Étape 3 : coordonnées -->
         <transition name="fade" mode="out-in">
           <div v-if="step === 3" class="space-y-6 sm:space-y-8 pb-10">
             <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Vos coordonnées</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <input v-model="form.nom" type="text" placeholder="Nom complet" class="input w-full" required />
-              <input v-model="form.email" type="email" placeholder="Email" class="input w-full" required />
-              <input v-model="form.telephone" type="tel" placeholder="Téléphone" class="input w-full" />
-              <input v-model="form.entreprise" type="text" placeholder="Entreprise" class="input w-full" />
+              <div>
+                <input
+                  v-model="form.nom"
+                  type="text"
+                  placeholder="Nom complet"
+                  class="input w-full"
+                  @blur="validateField('nom')"
+                />
+                <p v-if="errors.nom" class="text-red-500 text-sm mt-1">{{ errors.nom }}</p>
+              </div>
+              <div>
+                <input
+                  v-model="form.email"
+                  type="email"
+                  placeholder="Email"
+                  class="input w-full"
+                  @blur="validateField('email')"
+                />
+                <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
+              </div>
+              <div>
+                <input
+                  v-model="form.telephone"
+                  type="tel"
+                  placeholder="Téléphone"
+                  class="input w-full"
+                  @blur="validateField('telephone')"
+                />
+                <p v-if="errors.telephone" class="text-red-500 text-sm mt-1">{{ errors.telephone }}</p>
+              </div>
+              <div>
+                <input
+                  v-model="form.entreprise"
+                  type="text"
+                  placeholder="Entreprise"
+                  class="input w-full"
+                  @blur="validateField('entreprise')"
+                />
+                <p v-if="errors.entreprise" class="text-red-500 text-sm mt-1">{{ errors.entreprise }}</p>
+              </div>
+
             </div>
             <div class="flex justify-between items-center mt-2 sm:mt-4">
               <button
@@ -122,7 +159,7 @@
               </button>
               <button
                 @click="submitForm"
-                :disabled="loading"
+                :disabled="loading || !isFormValid"
                 class="bg-primary text-white py-3 px-6 sm:px-8 rounded-full font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
               >
                 <span v-if="loading" class="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-5 h-5"></span>
@@ -139,7 +176,11 @@
       v-if="showModal"
       class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4"
     >
+     
       <div class="bg-white text-gray-800 rounded-2xl shadow-2xl p-8 sm:p-10 max-w-md w-full text-center relative">
+        <!-- Logo centré en haut du modal -->
+    <ApplicationLogo class="mx-auto h-16 w-auto mb-4" />
+    
         <h2 class="text-2xl sm:text-3xl font-bold mb-4">Merci pour votre demande</h2>
         <p class="mb-6 text-gray-600">{{ modalMessage }}</p>
         <button
@@ -154,12 +195,12 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 import axios from 'axios'
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 
 const props = defineProps({
   services: { type: Array, default: () => [] },
-  backgroundImage: { type: String, default: '' }
 })
 
 const step = ref(0)
@@ -176,7 +217,65 @@ const form = reactive({
   message: ''
 })
 
+const errors = reactive({
+  nom: '',
+  email: '',
+  telephone: '',
+  service: '',
+  message: ''
+})
+
+const validateField = (field) => {
+  switch(field){
+    case 'nom':
+      errors.nom = form.nom.trim() ? '' : 'Le nom est requis.'
+      break;
+    case 'email':
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if(!form.email.trim()) errors.email = 'L\'email est requis.'
+      else if(!emailPattern.test(form.email)) errors.email = 'Email invalide.'
+      else errors.email = ''
+      break;
+   case 'telephone':
+  const phonePattern = /^\+?[0-9\s.-]{6,15}$/ 
+  if (!form.telephone.trim()) {
+    errors.telephone = 'Le téléphone est requis.'
+  } else if (!phonePattern.test(form.telephone)) {
+    errors.telephone = 'Téléphone invalide.'
+  } else {
+    errors.telephone = ''
+  }
+  break;
+
+    case 'service':
+      errors.service = form.service ? '' : 'Veuillez choisir un service.'
+      break;
+    case 'message':
+      errors.message = form.message.trim() ? '' : 'Le message est requis.'
+      break;
+    case 'entreprise':
+      errors.entreprise = form.entreprise.trim() ? '' : 'Le nom de l\'entreprise est requis.'
+      break;
+  }
+}
+
+const isFormValid = computed(() => {
+  validateField('nom')
+  validateField('email')
+  validateField('telephone')
+  validateField('service')
+  validateField('message')
+  validateField('entreprise')
+  return !errors.nom && !errors.email && !errors.telephone && !errors.service && !errors.message && !errors.entreprise
+})
+
+watch(form, (newVal) => {
+  Object.keys(newVal).forEach(field => validateField(field))
+}, { deep: true })
+
 const submitForm = async () => {
+  if(!isFormValid.value) return
+
   loading.value = true
   try {
     const response = await axios.post(route('contact.send'), form, {
@@ -216,28 +315,18 @@ const closeModal = () => showModal.value = false
   outline: none;
 }
 
-/* Animation fade */
 .fade-enter-active, .fade-leave-active {
   transition: all 0.4s ease;
 }
-.fade-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-.fade-enter-to, .fade-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
+.fade-enter-from { opacity: 0; transform: translateY(20px); }
+.fade-leave-to { opacity: 0; transform: translateY(-10px); }
+.fade-enter-to, .fade-leave-from { opacity: 1; transform: translateY(0); }
+
 .contact-section {
   background-image: url('/images/bg-12.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; /* optionnel pour effet parallax */
+  background-attachment: fixed;
 }
-
 </style>

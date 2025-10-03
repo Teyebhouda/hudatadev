@@ -49,9 +49,10 @@ const removeFile = (index) => {
   }
   previews.value.splice(index, 1)
 }
-
+const processing = ref(false)
 // Soumission
 const submit = () => {
+    processing.value = true
   const fd = new FormData()
   fd.append('title', form.title)
   fd.append('description', form.description)
@@ -75,6 +76,9 @@ const submit = () => {
     forceFormData: true,
     onSuccess: () => console.log('✅ Projet mis à jour'),
     onError: err => console.error('⚠️ Erreur', err),
+    onFinish: () => {
+      processing.value = false
+    }
   })
 }
 </script>
@@ -119,9 +123,10 @@ const submit = () => {
 <div class="flex gap-4 mt-6">
 
 
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-          Mettre à jour
-        </button>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition" :disabled="processing">
+          {{ processing ? 'Mise à jour...' : ' Mettre à jour' }}
+         
+        </button>     
         <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
                 @click="$inertia.visit(route('projects.index'))">
           Annuler

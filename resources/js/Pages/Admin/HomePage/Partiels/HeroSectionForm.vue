@@ -1,5 +1,5 @@
 <script setup>
-import { toRefs, reactive } from 'vue'
+import { toRefs } from 'vue'
 
 const props = defineProps({
   form: {
@@ -10,36 +10,35 @@ const props = defineProps({
 
 const { form } = toRefs(props)
 
-// Initialiser le tableau des slides si absent
+// Initialiser les slides si absents
 if (!form.value.slides) {
   form.value.slides = [
     {
       title: '',
       subtitle: '',
       button_text: '',
-      background_image: '',
+      existingImage: '/images/default.jpg', // ✅ image déjà enregistrée
+      background_image: '', // ✅ preview temporaire
       imageFile: null
     }
   ]
 }
 
-// Ajouter un slide
 function addSlide() {
   form.value.slides.push({
     title: '',
     subtitle: '',
     button_text: '',
+    existingImage: '', // si pas encore dans la BDD
     background_image: '',
     imageFile: null
   })
 }
 
-// Supprimer un slide
 function removeSlide(index) {
   form.value.slides.splice(index, 1)
 }
 
-// Gérer l’upload d’image pour un slide donné
 function handleImageUpload(event, slide) {
   const file = event.target.files[0]
   if (file) {
@@ -50,10 +49,13 @@ function handleImageUpload(event, slide) {
     }
     reader.readAsDataURL(file)
   } else {
-    slide.background_image = ''
+    // Ne touche pas à existingImage, juste reset l'upload
     slide.imageFile = null
+    slide.background_image = ''
+    // Do NOT clear existingImage unless explicitly requested
   }
 }
+
 </script>
 
 <template>
@@ -72,6 +74,7 @@ function handleImageUpload(event, slide) {
       >
         &times;
       </button>
+
       <div class="grid gap-4">
         <label>
           Titre du slide
@@ -85,6 +88,7 @@ function handleImageUpload(event, slide) {
           Texte du bouton
           <input v-model="slide.button_text" type="text" class="input" />
         </label>
+
         <div>
           <label class="block font-medium mb-1">Image de fond</label>
           <input
@@ -93,16 +97,28 @@ function handleImageUpload(event, slide) {
             @change="e => handleImageUpload(e, slide)"
             class="block w-full border rounded p-2"
           />
+
+          <!-- ✅ Aperçu : si une nouvelle image a été choisie -->
           <div v-if="slide.background_image" class="mt-2">
             <img
               :src="slide.background_image"
-              alt="Aperçu image"
+              alt="Nouvelle image"
+              class="max-w-xs rounded shadow"
+            />
+          </div>
+
+          <!-- ✅ Sinon afficher l’image déjà existante -->
+          <div v-else-if="slide.existingImage" class="mt-2">
+            <img
+              :src="slide.existingImage"
+              alt="Image existante"
               class="max-w-xs rounded shadow"
             />
           </div>
         </div>
       </div>
     </div>
+
     <button
       type="button"
       class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"

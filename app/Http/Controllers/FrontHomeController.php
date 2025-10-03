@@ -50,4 +50,12 @@ $projects = Project::with('images')->whereIn('id', $projectIds)->get();
         'footerPages' => $pages, 
     ]);
 }
+
+ public function contact()
+{
+    return Inertia::render('Front/Contact');
+
+
+}
+    
 }

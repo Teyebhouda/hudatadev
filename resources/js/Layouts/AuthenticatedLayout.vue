@@ -178,7 +178,41 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('home')"
+                            :active="route().current('home')"
+                        >
+
+                            HomePage
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('projects.index')"
+                            :active="route().current('projects.index')"
+                        >
+                            Projets
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('services.index')"
+                            :active="route().current('services.index')"
+                        >
+                            Services
+                        </ResponsiveNavLink>
+                         <ResponsiveNavLink
+                            :href="route('pages')"
+                            :active="route().current('pages')"
+                        >
+                            Pages
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('settings.edit')"
+                            :active="route().current('settings.edit')"
+                        >
+
+                            Paramètres
+                        </ResponsiveNavLink>
+                        
                     </div>
+
 
                     <!-- Responsive Settings Options -->
                     <div

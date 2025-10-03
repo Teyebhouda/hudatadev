@@ -46,14 +46,28 @@ const sectionComponents = {
 }
 
 // Charger les données de la section sélectionnée
+// Charger les données d'une section
 function loadSectionData(sectionKey) {
   const data = props.sections[sectionKey] || {}
-  console.log('Chargement des données pour la section:', sectionKey, data)
   Object.keys(form).forEach(key => delete form[key])
   Object.assign(form, data)
-    if (sectionKey === 'contact' && !form.fields_to_show) {
-    form.fields_to_show = []
+
+  // Spécifique Hero : init slides avec existingImage
+  if (sectionKey === 'hero' && Array.isArray(form.slides)) {
+    form.slides = form.slides.map(slide => ({
+      ...slide,
+      imageFile: null,
+      background_image: '',
+      existingImage: slide.background_image || ''
+    }))
   }
+   // Spécifique Services
+  if (sectionKey === 'services') {
+    form.services_ids = Array.isArray(form.services_ids)
+      ? form.services_ids
+      : []   // 🔹 Assure toujours un tableau
+  }
+
 }
 watch(activeSection, loadSectionData, { immediate: true })
 
@@ -63,6 +77,8 @@ const processing = ref(false)
 function submit() {
   processing.value = true
   const rawForm = toRaw(form)
+  console.log('Soumission du formulaire pour la section :', activeSection.value)
+  console.log('Données brutes du formulaire :', rawForm)
   const formData = new FormData()
 
   for (const key in rawForm) {
@@ -73,38 +89,69 @@ function submit() {
       value.forEach((slide, idx) => {
         for (const subKey in slide) {
           const subValue = slide[subKey]
-          if (subKey === 'imageFile' && subValue instanceof File) {
-            formData.append(`slides[${idx}][imageFile]`, subValue)
+
+          if (subKey === 'imageFile') {
+            // ✅ N'ajouter que si c'est un vrai fichier
+            if (subValue instanceof File) {
+              formData.append(`slides[${idx}][imageFile]`, subValue)
+            }
+          } else if (subKey === 'background_image') {
+            // ✅ Ignorer background_image si imageFile existe (base64 inutile)
+            if (!(slide.imageFile instanceof File)) {
+              formData.append(`slides[${idx}][background_image]`, subValue)
+            }
           } else {
             formData.append(`slides[${idx}][${subKey}]`, subValue)
           }
         }
       })
     }
-    // 2. Cas tableau d’objets (ex: items[])
+
+    // 2. Cas tableau d’objets (ex: items[], steps[], etc.)
     else if (Array.isArray(value) && value.length > 0 && typeof value[0] === 'object') {
       value.forEach((item, index) => {
         for (const subKey in item) {
           const subValue = item[subKey]
-          if (subKey === 'imageFile' && subValue instanceof File) {
-            formData.append(`${key}[${index}][imageFile]`, subValue)
+
+          if (subKey === 'imageFile') {
+            if (subValue instanceof File) {
+              formData.append(`${key}[${index}][imageFile]`, subValue)
+            }
+          } else if (subKey === 'background_image') {
+            if (!(item.imageFile instanceof File)) {
+              formData.append(`${key}[${index}][background_image]`, subValue)
+            }
           } else {
             formData.append(`${key}[${index}][${subKey}]`, subValue)
           }
         }
       })
     }
-    // ✅ 2bis. Cas tableau simple (ex: fields_to_show)
-    else if (Array.isArray(value)) {
-      value.forEach((v, index) => {
-        formData.append(`${key}[${index}]`, v)
-      })
-    }
-    // 3. Cas d’une propriété imageFile ou logoFile directement à la racine
-    else if ((key === 'imageFile' || key === 'logoFile' || key === 'background_imageFile') && value instanceof File) {
-  formData.append(key, value)
+
+else if (key === 'services_ids' && Array.isArray(value)) {
+  value.forEach((v, index) => {
+    formData.append(`${key}[${index}]`, v)
+  })
 }
-    // 4. Cas objets simples (ex: socials, footer.socials...)
+
+
+// 2bis. Cas tableau simple (ex: fields_to_show)
+else if (Array.isArray(value)) {
+  if (value.length > 0) {
+    value.forEach((v, index) => {
+      formData.append(`${key}[${index}]`, v)
+    })
+  }
+}
+
+
+
+    // 3. Fichier unique (ex: logoFile, imageFile à la racine)
+    else if ((key === 'imageFile' || key === 'logoFile' || key === 'background_imageFile') && value instanceof File) {
+      formData.append(key, value)
+    }
+
+    // 4. Objets simples (ex: footer.socials)
     else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
       if (key === 'socials') {
         try {
@@ -115,26 +162,39 @@ function submit() {
       } else {
         for (const subKey in value) {
           const subValue = value[subKey]
-          if (subKey === 'imageFile' && subValue instanceof File) {
-            formData.append(`${key}[imageFile]`, subValue)
+
+          if (subKey === 'imageFile') {
+            if (subValue instanceof File) {
+              formData.append(`${key}[imageFile]`, subValue)
+            }
+          } else if (subKey === 'background_image') {
+            if (!(value.imageFile instanceof File)) {
+              formData.append(`${key}[background_image]`, subValue)
+            }
           } else {
             formData.append(`${key}[${subKey}]`, subValue)
           }
         }
       }
     }
-    // 5. Ignorer background_image si imageFile existe (base64 temporaire)
+
+    // 5. Champ background_image seul à la racine
     else if (key === 'background_image' && rawForm.imageFile instanceof File) {
+      // Ignorer (on préfère imageFile)
       continue
     }
-    // 6. Tous les autres champs simples
+
+    // 6. Tous les autres champs simples (string, bool, etc.)
     else {
       formData.append(key, value)
     }
   }
 
   formData.append('_method', 'PUT')
-
+for (let pair of formData.entries()) {
+  console.log(pair[0], pair[1])
+}
+console.log(toRaw(form))
   Inertia.post(route('admin.homepage.update', activeSection.value), formData, {
     forceFormData: true,
     onFinish: () => {
