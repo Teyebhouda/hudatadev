@@ -1,9 +1,9 @@
 <template>
   <header class="sticky top-0 z-50 w-full">
-    <!-- ✅ Topbar -->
+    <!-- ✅ Topbar (hidden on mobile) -->
     <div
-      class="topbar fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
-      :class="[isCompact ? 'py-2 h-14' : 'py-4 h-24']"
+      class="topbar hidden md:block fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
+      :class="[isCompact ? 'py-2 h-18' : 'py-4 h-24']"
     >
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm md:text-base">
         <!-- Logo -->
@@ -43,20 +43,22 @@
       class="navbar fixed w-full bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm z-40 transition-transform duration-300"
       :class="[
         isHidden ? '-translate-y-full' : 'translate-y-0',
-        isCompact ? 'top-14' : 'top-24'
+        isCompact ? 'md:top-14 top-0' : 'md:top-24 top-0'
       ]"
     >
-      <div class="container mx-auto px-4 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div
+        class="container mx-auto px-4 py-5 md:py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+      >
         <!-- Mobile: Logo + Hamburger -->
         <div class="flex w-full items-center justify-between md:hidden">
           <img
             :src="$page.props.settings?.logo"
             alt="Logo"
-            class="h-10 object-contain"
+            class="h-14 object-contain"  
           />
           <button
             @click="toggleMenu"
-            class="text-primary text-3xl"
+            class="text-primary text-4xl" 
             aria-label="Toggle menu"
           >
             <i :class="isMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
@@ -77,7 +79,7 @@
           <a
             href="/"
             @click.prevent="scrollToContact"
-            class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-2 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
+            class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-3 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
           >
             Collaborer avec nous
           </a>
