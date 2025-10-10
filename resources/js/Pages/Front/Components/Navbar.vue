@@ -1,9 +1,9 @@
 <template>
-  <header class="sticky w-full top-0 z-50">
+  <header class="sticky top-0 z-50 w-full">
     <!-- ✅ Topbar -->
     <div
-      class="topbar hidden md:block fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
-      :class="[isCompact ? 'py-1 h-10' : 'py-3 h-16']"
+      class="topbar fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
+      :class="[isCompact ? 'py-2 h-14' : 'py-4 h-24']"
     >
       <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3 text-sm md:text-base">
         <!-- Logo -->
@@ -12,7 +12,7 @@
             :src="$page.props.settings?.logo"
             alt="Logo"
             class="object-contain drop-shadow-sm transition-all duration-300"
-            :class="isCompact ? 'h-6' : 'h-10'"
+            :class="isCompact ? 'h-10' : 'h-16'"
           />
         </div>
 
@@ -39,21 +39,20 @@
     </div>
 
     <!-- ✅ Navbar -->
-   <nav
-  class="navbar fixed w-full bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm z-40 transition-transform duration-300"
-  :class="[
-    isHidden ? '-translate-y-full' : 'translate-y-0',
-    isCompact ? 'sm:top-10 top-0' : 'md:top-16 top-0'
-  ]"
- >
-      <div class="container mx-auto px-4 md:px-16 py-2.5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-
-        <!-- Ligne 1 : Logo + hamburger -->
+    <nav
+      class="navbar fixed w-full bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm z-40 transition-transform duration-300"
+      :class="[
+        isHidden ? '-translate-y-full' : 'translate-y-0',
+        isCompact ? 'top-14' : 'top-24'
+      ]"
+    >
+      <div class="container mx-auto px-4 py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <!-- Mobile: Logo + Hamburger -->
         <div class="flex w-full items-center justify-between md:hidden">
           <img
             :src="$page.props.settings?.logo"
             alt="Logo"
-            class="h-8 object-contain"
+            class="h-10 object-contain"
           />
           <button
             @click="toggleMenu"
@@ -67,24 +66,21 @@
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center gap-8 font-semibold text-gray-700 tracking-wide">
           <a href="/" class="hover:text-primary transition">Accueil</a>
-          <!-- Service : simple lien -->
           <a href="#services-section" class="hover:text-primary transition">Services</a>
-
           <Dropdown :items="projects" title="Projets" :slugify="slugify" />
           <a :href="`/contact`" class="hover:text-primary transition">Contact</a>
           <a href="#parallax-stats" class="hover:text-primary transition">À propos</a>
         </div>
 
-        <!-- Bouton "Demander un devis" (mobile ET desktop) -->
+        <!-- CTA Button -->
         <div class="w-full md:w-auto">
-         <a
-  href="/"
-  @click.prevent="scrollToContact"
-  class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-2 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
->
-  Collaborer avec nous
-        </a>
-
+          <a
+            href="/"
+            @click.prevent="scrollToContact"
+            class="block w-full text-center bg-gradient-to-r from-blue-800 to-blue-900 text-white py-2 rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-blue-900 transition-all duration-300 md:inline-block md:py-2.5 md:px-6 md:rounded-full"
+          >
+            Collaborer avec nous
+          </a>
         </div>
       </div>
 
@@ -95,9 +91,7 @@
           class="md:hidden bg-white/95 backdrop-blur-md shadow-lg px-6 py-6 flex flex-col gap-4 font-semibold text-gray-700"
         >
           <a href="/" class="hover:text-primary transition">Accueil</a>
-          <!-- Service : simple lien -->
           <a href="#services-section" class="hover:text-primary transition">Services</a>
-
           <MobileDropdown :items="projects" title="Projets" :slugify="slugify" />
           <a :href="`/contact`" class="hover:text-primary transition">Contact</a>
           <a href="#parallax-stats" class="hover:text-primary transition">À propos</a>
@@ -114,13 +108,12 @@ import MobileDropdown from './MobileDropdown.vue'
 import { useScrollHide } from '@/useScrollHide'
 import { ref, onMounted, onUnmounted } from 'vue'
 
-
 const props = defineProps({
   services: Array,
   projects: Array,
 })
+
 const scrollToContact = () => {
-  // Navigate to home page si on n'y est pas
   if (window.location.pathname !== '/') {
     Inertia.visit('/', {
       onSuccess: () => {
@@ -180,20 +173,5 @@ const slugify = (text) =>
 
 .topbar {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.h-24 {
-  height: 6rem;
-}
-.h-14 {
-  height: 3.5rem;
-}
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-.py-1 {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
 }
 </style>
