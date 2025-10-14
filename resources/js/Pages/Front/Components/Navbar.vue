@@ -5,7 +5,7 @@
       class="topbar hidden md:block fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-200 z-50 transition-all duration-300"
       :class="[isCompact ? 'py-2 h-18' : 'py-4 h-24']"
     >
-      <div class="max-w-screen-xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-3 text-sm md:text-base">
+      <div class="max-w-screen-xl mx-auto px-2 flex flex-col md:flex-row items-center justify-between gap-3 text-sm md:text-base">
         <!-- Logo -->
         <div class="flex items-center gap-3">
           <img
@@ -46,7 +46,7 @@
         isCompact ? 'md:top-14 top-0' : 'md:top-24 top-0'
       ]"
     >
-      <div class="max-w-screen-xl mx-auto px-6 py-5 md:py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="max-w-screen-xl mx-auto px-2 py-5 md:py-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
 
         <!-- Mobile: Logo + Hamburger -->
         <div class="flex w-full items-center justify-between md:hidden">
