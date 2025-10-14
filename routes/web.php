@@ -52,8 +52,11 @@ Route::get('/pages/{id}/edit', [PagesController::class, 'edit'])->name('pages.ed
 //Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
  Route::resource('services', ServiceController::class);
    Route::post('/admin/services/batch-update', [ServiceController::class, 'batchUpdate'])->name('services.batch-update');
-    Route::resource('projects', ProjectController::class);
+    //Route::resource('projects', ProjectController::class);
+
     Route::get('/admin/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/admin/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+
     Route::get('/admin/projects/create', [ProjectController::class, 'create'])->name('projects.create');
 Route::post('/admin/projects', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/admin/api/projects', [ProjectController::class, 'apiIndex'])->name('admin.projects.api');

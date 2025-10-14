@@ -27,13 +27,13 @@
       </div>
 
       <!-- Bloc droit (formulaire) -->
-      <div class="overflow-y-auto max-h-[90vh] lg:max-h-none pr-1">
+      <div class="relative overflow-visible max-h-[90vh] lg:max-h-none pr-4 sm:pr-6">
         
         <!-- Étape 0 -->
         <div v-if="step === 0" class="space-y-6 pb-8">
           <button
             @click="step = 1"
-            class="bg-primary text-white py-3 px-6 sm:px-8 rounded-full font-semibold shadow-md hover:bg-indigo-700 transition duration-300 w-full sm:w-auto text-center"
+            class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
             aria-label="Commencer une demande de projet"
           >
             Faire une demande
@@ -49,11 +49,11 @@
                 v-for="(type, index) in services"
                 :key="index"
                 @click="form.service = type.title"
-                :class="[
-                  'py-3 sm:py-4 px-4 sm:px-6 rounded-xl border font-semibold text-left transition-all duration-300 w-full',
+                :class="[ 
+                  'py-3 sm:py-4 px-4 sm:px-6 rounded-xl border font-semibold text-left transition-all duration-300 w-full transform origin-center',
                   form.service === type.title
-                    ? 'bg-primary text-white border-primary shadow-lg scale-105'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300'
+                    ? 'bg-primary text-white border-primary shadow-lg hover:shadow-xl'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 hover:shadow-md hover:-translate-y-1'
                 ]"
                 :aria-pressed="form.service === type.title"
               >

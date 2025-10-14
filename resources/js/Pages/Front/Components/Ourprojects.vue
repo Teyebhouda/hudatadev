@@ -5,7 +5,7 @@
     role="region"
     aria-labelledby="projects-title"
   >
-    <!-- Wave transition depuis Services -->
+    <!-- Wave transition -->
     <div class="absolute -top-12 w-full overflow-hidden leading-[0]">
       <svg class="relative block w-full h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 120">
         <path d="M0 0c144.3 62.1 286.9 79.9 432 60 172.7-24 343.7-72 520 4 82.1 38.2 161 60 248 54 56.4-3.9 109.3-21 168-43 48.9-19.6 106.4-44.2 132-69V120H0V0z" fill="currentColor"/>
@@ -13,13 +13,13 @@
     </div>
 
     <div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
+      
       <!-- Bloc gauche sticky -->
       <div
-        class="flex flex-col justify-start md:sticky max-h-[calc(100vh-6rem)] overflow-y-auto h-fit"
+        class="flex flex-col justify-start md:sticky max-h-[calc(100vh-6rem)] overflow-visible h-fit"
         :style="{ top: isCompact ? '4.5rem' : '6rem' }"
       >
         <div class="mb-16 text-left">
-          <!-- Titre avec padding invisible pour scroll -->
           <h2
             id="projects-title"
             class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 leading-tight scroll-mt-28"
@@ -39,30 +39,22 @@
           </p>
         </div>
 
-        <!-- CTA -->
+        <!-- CTA corrigé -->
         <a
           href="/projects"
-          class="inline-flex items-center gap-2 bg-primary text-white font-medium px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/50"
+          class="inline-flex items-center gap-2 bg-primary text-white font-medium px-6 py-3 rounded-xl shadow-lg hover:bg-primary/90 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/50 transform"
           role="button"
           tabindex="0"
           aria-label="Voir tous les projets"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
           Voir tous les projets
         </a>
       </div>
 
-      <!-- Masonry -->
+      <!-- Masonry corrigé -->
       <div class="columns-1 sm:columns-2 gap-6 space-y-6" role="list" aria-label="Liste des projets">
         <article
           v-for="(project, index) in content.slice(0, 6)"
@@ -78,12 +70,12 @@
             class="block"
             :aria-label="`Voir les détails du projet ${project.title}`"
           >
-            <!-- Image -->
+            <!-- Image corrigée -->
             <img
               v-if="project.images.length"
               :src="`/storage/${project.images[0].path}`"
               :alt="project.title"
-              class="w-full h-96 object-cover rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:blur-[1px]"
+              class="w-full h-96 object-cover rounded-xl transition-all duration-500 transform group-hover:scale-105 group-hover:-translate-y-1"
               loading="lazy"
             />
             <div
@@ -101,10 +93,7 @@
               aria-hidden="true"
             >
               <h3 class="text-white text-xl font-bold drop-shadow-md">{{ project.title }}</h3>
-              <p
-                class="text-gray-200 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                tabindex="0"
-              >
+              <p class="text-gray-200 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" tabindex="0">
                 {{ project.description }}
               </p>
               <div
@@ -121,6 +110,7 @@
     </div>
   </section>
 </template>
+
 
 <script setup>
 import { defineProps, onMounted, watch, nextTick, ref } from "vue"
@@ -173,4 +163,8 @@ watch(
     scroll-margin-top: 4.5rem; /* header mobile */
   }
 }
+.transform {
+  transform-origin: center;
+}
+
 </style>

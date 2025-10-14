@@ -65,8 +65,8 @@ const images = computed(() => props.project.images || [])
           <div v-html="project.content"></div>
         </div>
         <div class="mt-8 flex gap-4">
-          <button class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">Contactez-nous</button>
-          <button class="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg shadow hover:bg-gray-200 transition">Voir plus de projets</button>
+          <a :href="`/contact`" class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 hover:shadow-lg transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70">Contactez-nous</a>
+          <a href="/projects" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg shadow hover:bg-gray-200 transition">Voir plus de projets</a>
         </div>
       </div>
     </div>

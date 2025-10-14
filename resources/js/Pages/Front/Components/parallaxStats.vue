@@ -20,7 +20,7 @@
             class="p-5 bg-white shadow rounded-xl text-center transform transition-all duration-300 hover:scale-105"
             role="listitem"
           >
-            <h3 class="text-3xl font-extrabold text-primary"><span ref="statRefs">{{ stat.value }}</span></h3>
+            <h3 class="text-3xl font-extrabold  text-secondary"><span ref="statRefs">{{ stat.value }}</span></h3>
             <p class="text-sm text-gray-500">{{ stat.label }}</p>
           </div>
         </div>

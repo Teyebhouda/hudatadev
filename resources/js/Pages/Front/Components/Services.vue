@@ -1,18 +1,18 @@
 <template>
- <section
+  <section
   ref="servicesSection"
   id="services-section"
-  class="relative py-24 transition-all duration-700 ease-out overflow-x-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100"
-  :class="{ 'opacity-100 translate-y-0': isVisible, 'opacity-0 translate-y-10': !isVisible }"
->
-   <!-- Fond décoratif immersif -->
-   <div class="absolute inset-0 pointer-events-none">
-     <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-     <div class="absolute -bottom-24 -left-16 w-80 h-80 bg-indigo-200/20 rounded-full blur-2xl animate-bounce-slow"></div>
-   </div>
+  class="relative py-24 transition-all duration-700 ease-out overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100"
+    :class="{ 'opacity-100 translate-y-0': isVisible, 'opacity-0 translate-y-10': !isVisible }"
+  >
+    <!-- Fond décoratif -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+      <div class="absolute -bottom-24 -left-16 w-80 h-80 bg-indigo-200/20 rounded-full blur-2xl animate-bounce-slow"></div>
+    </div>
 
     <div class="relative max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Title -->
+      <!-- Titre -->
       <div class="mb-12 text-left">
         <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
           {{ content.title }}
@@ -26,10 +26,10 @@
         </p>
       </div>
 
-      <!-- Tabs -->
-      <div class="-mx-4 px-4 overflow-x-auto no-scrollbar relative">
+      <!-- Onglets -->
+      <div class="-mx-4 px-4 overflow-x-auto no-scrollbar relative ">
         <div
-          class="flex gap-6 whitespace-nowrap border-b border-gray-200 pb-2 snap-x snap-mandatory"
+          class="flex gap-6 pt-2 border-b border-gray-200 pb-2 whitespace-nowrap border-b border-gray-200 pb-2 snap-x snap-mandatory"
           role="tablist"
         >
           <button
@@ -41,11 +41,11 @@
             @click="activeTab = index"
             @keydown.left.prevent="prevTab"
             @keydown.right.prevent="nextTab"
-            class="snap-start relative pb-2 px-6 py-2 rounded-full transition-all duration-300 font-medium focus:outline-none focus:ring-2 focus:ring-primary/70"
+            class="snap-start relative pb-2 px-6 py-2 rounded-full transition-all duration-300 font-medium focus:outline-none focus:ring-2 focus:ring-primary/70 transform"
             :class="[
               activeTab === index
-                ? 'bg-primary text-white shadow-lg scale-105'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
+                ? 'bg-primary text-white shadow-md -translate-y-0.5'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:-translate-y-0.5 hover:shadow-md'
             ]"
           >
             {{ service.title }}
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <!-- Content -->
+      <!-- Contenu -->
       <transition name="fade" mode="out-in">
         <div
           :key="activeTab"
@@ -64,13 +64,12 @@
             <img
               :src="content.items[activeTab].background_image || '/images/worker-silhouette.png'"
               :alt="`Illustration pour ${content.items[activeTab].title}`"
-              class="w-full h-full object-cover rounded-2xl shadow-2xl transition-transform duration-700 ease-in-out group-hover:scale-110"
+              class="w-full h-full object-cover rounded-2xl shadow-2xl transition-transform duration-700 ease-in-out group-hover:scale-105 group-hover:-translate-y-1 transform"
             />
-            <!-- Overlay effet -->
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
           </div>
 
-          <!-- Text -->
+          <!-- Texte -->
           <div :key="activeTab + '-text'" class="animate-fadeInRight delay-200">
             <h3 class="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2">
               {{ content.items[activeTab].title }}
@@ -87,15 +86,14 @@
               v-html="content.items[activeTab].long_description"
             />
 
-            <!-- CTA -->
+            <!-- Bouton CTA -->
             <div class="mt-6 flex gap-4">
               <a
                 href="#contact-form"
-                class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:scale-105 transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
+                class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 hover:shadow-lg transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
               >
                 Demander un devis
               </a>
-              
             </div>
           </div>
         </div>
@@ -160,7 +158,7 @@ const nextTab = () => {
 }
 </script>
 
-<style>
+<style scoped>
 .fade-enter-active, .fade-leave-active {
   transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -172,6 +170,7 @@ const nextTab = () => {
   opacity: 0;
   transform: scale(0.98) translateY(-10px);
 }
+
 @keyframes fadeInRight {
   0% { opacity: 0; transform: translateX(30px); }
   100% { opacity: 1; transform: translateX(0); }
@@ -180,7 +179,7 @@ const nextTab = () => {
   animation: fadeInRight 0.8s ease-out forwards;
 }
 
-/* Animation lente pour l'élément décoratif */
+/* Animation lente pour les éléments décoratifs */
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
