@@ -29,16 +29,22 @@
       <!-- Bloc droit (formulaire) -->
       <div class="relative overflow-visible max-h-[90vh] lg:max-h-none pr-4 sm:pr-6">
         
-        <!-- Étape 0 -->
-        <div v-if="step === 0" class="space-y-6 pb-8">
-          <button
-            @click="step = 1"
-            class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
-            aria-label="Commencer une demande de projet"
-          >
-            Faire une demande
-          </button>
-        </div>
+      <!-- Étape 0 -->
+<div v-if="step === 0" class="space-y-6 pb-8 flex flex-col items-center text-center h-full justify-center">
+ 
+  <p class="text-gray-100 text-base sm:text-lg max-w-sm">
+    Dites-nous ce que vous avez en tête. Nous vous répondrons rapidement avec des idées concrètes !
+  </p>
+
+  <button
+    @click="step = 1"
+    class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
+    aria-label="Commencer une demande de projet"
+  >
+    Faire une demande
+  </button>
+</div>
+
 
         <!-- Étape 1 : choix service -->
         <transition name="fade" mode="out-in">
