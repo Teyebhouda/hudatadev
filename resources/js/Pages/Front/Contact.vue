@@ -1,7 +1,8 @@
 <template>
   <div class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-gray-50 to-gray-100">
     <Navbar />
-    <br /><br /><br />
+    <br /><br /><br /> <br /> <br />
+
 
     <main class="flex-1 relative overflow-hidden">
       <!-- Background animé -->
