@@ -2,7 +2,7 @@
   <section
   ref="servicesSection"
   id="services-section"
-  class="relative py-24 transition-all duration-700 ease-out overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100"
+  class="relative py-20 transition-all duration-700 ease-out overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100"
     :class="{ 'opacity-100 translate-y-0': isVisible, 'opacity-0 translate-y-10': !isVisible }"
   >
     <!-- Fond décoratif -->

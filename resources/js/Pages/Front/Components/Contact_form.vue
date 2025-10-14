@@ -94,7 +94,7 @@
             <div class="flex justify-between items-center mt-2 sm:mt-4">
               <button
                 @click="step--"
-                class="text-sm text-gray-600 underline hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
+                class="text-sm text-gray-800 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
               >
                 Précédent
               </button>
@@ -159,7 +159,7 @@
             <div class="flex justify-between items-center mt-2 sm:mt-4">
               <button
                 @click="step--"
-                class="text-sm text-gray-600 underline hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
+                class="text-sm text-gray-800 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
               >
                 Précédent
               </button>

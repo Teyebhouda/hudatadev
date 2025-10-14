@@ -49,49 +49,56 @@
 <div class="relative z-40 -mt-10 md:-mt-16 px-4 md:px-16">
   <div class="services-wrapper bg-white/80 backdrop-blur-sm rounded-xl shadow-md py-4 px-3 md:px-10">
 
-    <!-- 📱 Mobile Swiper -->
-    <div class="block md:hidden">
-      <Swiper
-        :modules="[Pagination]"
-        :slides-per-view="2.3"
-        :space-between="12"
-        :pagination="{ clickable: true }"
-        class="!pb-6"
-      >
-        <SwiperSlide v-for="(service, i) in services" :key="i">
-          <div
-            class="service-card-mobile group p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center cursor-pointer"
-            @click="scrollToService(service.id)"
-          >
-            <component
-              :is="icons[i % icons.length]"
-              class="h-6 w-6 text-primary mb-2 group-hover:scale-110 transform transition duration-300"
-            />
-            <h3 class="text-xs font-semibold text-gray-700 group-hover:text-primary">
-              {{ service.title }}
-            </h3>
-          </div>
-        </SwiperSlide>
-      </Swiper>
-    </div>
-
-    <!-- 🖥️ Desktop Grid -->
-    <div class="hidden md:grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+  <!-- 📱 Mobile Swiper -->
+<div class="block md:hidden">
+  <Swiper
+    :modules="[Pagination]"
+    :slides-per-view="2.3"
+    :space-between="12"
+    :pagination="{ clickable: true }"
+    class="!pb-6"
+    :breakpoints="{
+      320: { slidesPerView: 1.4 },
+      480: { slidesPerView: 2.1 },
+      640: { slidesPerView: 2.3 }
+    }"
+  >
+    <SwiperSlide v-for="(service, i) in services" :key="i">
       <div
-        v-for="(service, i) in services"
-        :key="i"
-        class="service-card group p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center cursor-pointer flex flex-col items-center justify-center"
+        class="service-card-mobile group p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center text-center cursor-pointer"
         @click="scrollToService(service.id)"
       >
         <component
           :is="icons[i % icons.length]"
-          class="h-8 w-8 text-primary mb-2 group-hover:scale-110 transition-transform duration-300"
+          class="h-6 w-6 text-primary mb-2 group-hover:scale-110 transform transition duration-300"
         />
-        <h3 class="text-sm font-semibold text-gray-700 group-hover:text-primary">
+        <h3 class="text-xs font-semibold text-gray-700 group-hover:text-primary">
           {{ service.title }}
         </h3>
       </div>
-    </div>
+    </SwiperSlide>
+  </Swiper>
+</div>
+
+
+   <!-- 🖥️ Desktop Grid -->
+<div class="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6">
+  <div
+    v-for="(service, i) in services"
+    :key="i"
+    class="service-card group p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 text-center cursor-pointer flex flex-col items-center justify-center"
+    @click="scrollToService(service.id)"
+  >
+    <component
+      :is="icons[i % icons.length]"
+      class="h-8 w-8 text-primary mb-2 group-hover:scale-110 transition-transform duration-300"
+    />
+    <h3 class="text-sm font-semibold text-gray-700 group-hover:text-primary">
+      {{ service.title }}
+    </h3>
+  </div>
+</div>
+
 
   </div>
 </div>
