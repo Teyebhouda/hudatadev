@@ -17,6 +17,8 @@ const projects = ref(props.projectsData)
   <div class="min-h-screen flex flex-col text-gray-800">
     <!-- Navbar -->
     <Navbar :projects="projects" />
+      <!-- Main Content -->
+      <section class="py-12 bg-gray-100">
 
     <main class="flex-1 py-16 px-4 md:px-12">
       <h1 class="text-4xl font-bold mb-12 text-center">Nos Projets</h1>
@@ -51,6 +53,7 @@ const projects = ref(props.projectsData)
         </div>
       </div>
     </main>
+      </section>
 
     <!-- Footer -->
     <Footer />

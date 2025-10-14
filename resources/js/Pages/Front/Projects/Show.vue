@@ -26,7 +26,7 @@ const images = computed(() => props.project.images || [])
     
     <!-- Section principale du projet -->
       <main class="flex-1">
-  <section class="bg-white py-16 px-4 md:px-12 min-h-screen">
+  <section class="bg-white py-20 px-4 md:px-12 min-h-screen">
     <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-start">
       <!-- Images du projet -->
       <div>
