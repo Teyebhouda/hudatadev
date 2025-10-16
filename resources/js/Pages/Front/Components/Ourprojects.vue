@@ -25,18 +25,16 @@
             class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 leading-tight scroll-mt-28"
             tabindex="0"
           >
-            Nos Projets
+           {{ content.title }}
           </h2>
           <div class="flex items-center gap-3 mb-4">
             <div class="w-14 h-1 bg-primary rounded-full"></div>
-            <span class="text-gray-400 text-sm uppercase tracking-widest">Expertise</span>
+            <span class="text-gray-400 text-sm uppercase tracking-widest">{{ content.subtitle }}</span>
           </div>
           <p class="text-gray-700 text-lg leading-relaxed mb-4" tabindex="0">
-            Plongez dans notre univers créatif à travers une sélection de projets récents. Chaque réalisation témoigne de notre expertise et de notre passion pour le design moderne.
+{{ content.description }}
           </p>
-          <p class="text-lg sm:text-xl text-gray-600 mt-2 max-w-2xl leading-relaxed">
-            Faites défiler pour explorer nos réalisations les plus marquantes.
-          </p>
+         
         </div>
 
         <!-- CTA corrigé -->
