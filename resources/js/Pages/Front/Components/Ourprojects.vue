@@ -20,9 +20,8 @@
         :style="{ top: isCompact ? '4.5rem' : '6rem' }"
       >
         <div class="mb-16 text-left">
-          <h2
-            id="projects-title"
-            class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4 leading-tight scroll-mt-28"
+          
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight"
             tabindex="0"
           >
            {{ content.title }}
@@ -55,7 +54,7 @@
       <!-- Masonry corrigé -->
       <div class="columns-1 sm:columns-2 gap-6 space-y-6" role="list" aria-label="Liste des projets">
         <article
-          v-for="(project, index) in content.slice(0, 6)"
+          v-for="(project, index) in content.items.slice(0, 6)"
           :key="project.id"
           class="relative group rounded-xl overflow-hidden break-inside-avoid cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300"
           :data-aos="index % 2 === 0 ? 'fade-up' : 'fade-down'"
@@ -116,9 +115,14 @@ import AOS from "aos"
 import "aos/dist/aos.css"
 
 const props = defineProps({
+ 
   content: {
-    type: Array,
-    default: () => []
+    type: Object,
+    default: () => ({
+      title: "Nos Projets",
+      subtitle: "Découvrez nos réalisations",
+      description: "Explorez une sélection de nos projets récents, illustrant notre expertise et notre engagement envers l'excellence dans chaque réalisation."
+    })
   }
 })
 

@@ -46,7 +46,7 @@ $projects = Project::with('images')->whereIn('id', $projectIds)->get();
 //dd($projects);
     return Inertia::render('Front/Home', [
         'sections' => $sections,
-        'projectsData' => $projects,
+        //'projectsData' => $projects,
         'footerPages' => $pages, 
     ]);
 }

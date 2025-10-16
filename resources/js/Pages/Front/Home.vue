@@ -15,16 +15,10 @@ import { ref, onMounted } from 'vue'
 import ParallaxStats from './Components/parallaxStats.vue'
 import Topbar from './Components/Topbar.vue'
 
-const props = defineProps({
-  projectsData: {
-    type: Array,
-    default: () => []
-  }
-})
-const projects = ref(props.projectsData)
+
 const footerPages = computed(() => page.props.footerPages) // ✅ dispo direct
 
-console.log('projectsdata', projects.value)
+
 
 const contactSection = ref(null)
 const selectedService = ref('')
@@ -55,13 +49,16 @@ const sections =computed(() => page.props.sections )
 const heroContent = computed(() =>sections.value.hero?.content || {})
 const aboutUsContent = computed(() => sections.value.aboutus?.content || {})
 const servicesContent = computed(() =>sections.value.services?.content || {})
+const projectsContent = computed(() =>sections.value.projects?.content || {})
 const whyChooseUsContent = computed(() => sections.value.whyChooseUs?.content || {})
 const testimonialsContent = computed(() =>sections.value.testimonials?.content || {})
 const contactContent = computed(() =>sections.value.footer?.content || {})
 const footerContent = computed(() =>sections.value.footer?.content || {})
 const services = computed(() => sections.value.services?.content.items || [])
+const projects = computed(() => sections.value.projects?.content.items || [])
 const parallaxStatsContent = computed(() => sections.value.ParallaxStats?.content || {})
 console.log('servicesitems', services.value)
+console.log('projects_items', projects.value)
 
 </script>
 <template>
@@ -90,7 +87,7 @@ console.log('servicesitems', services.value)
      
        <!-- <whyChooseUs :content="whyChooseUsContent" /> -->
       <!-- <Testimonials :content="testimonialsContent"/> -->
-      <Ourprojects :content="projects" />
+      <Ourprojects :content="projectsContent"/>
      
       <Contat_form :content="contactContent" :services="services" :initialService="selectedService" />
     </main>
