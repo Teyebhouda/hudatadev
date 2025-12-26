@@ -16,6 +16,7 @@ const form = useForm({
   content: props.project?.content || '',
   location: props.project?.location || '',
   date: props.project?.date || '',
+  link: props.project?.link || '',
   meta_title: props.project?.meta_title || '',
   meta_description: props.project?.meta_description || '',
   meta_keywords: props.project?.meta_keywords || ''
@@ -59,6 +60,7 @@ const submit = () => {
   fd.append('content', form.content)
   fd.append('location', form.location)
   fd.append('date', form.date || '')
+  fd.append('link', form.link || '')
   fd.append('meta_title', form.meta_title)
   fd.append('meta_description', form.meta_description)
   fd.append('meta_keywords', form.meta_keywords)
@@ -98,6 +100,9 @@ const submit = () => {
         <input v-model="form.location" type="text" placeholder="Lieu"
                class="w-full border rounded p-2 focus:ring focus:ring-blue-300" />
         <input v-model="form.date" type="date"
+               class="w-full border rounded p-2 focus:ring focus:ring-blue-300" />
+       
+      <input v-model="form.link" type="text" placeholder="Lien du projet"
                class="w-full border rounded p-2 focus:ring focus:ring-blue-300" />
 
         <input type="file" multiple accept=".png,.jpg,.jpeg,.webp,.avif"

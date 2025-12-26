@@ -9,6 +9,7 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { MotionPlugin } from '@vueuse/motion';
 
 import ToastPlugin from 'vue-toast-notification';
 // Import one of the available themes
@@ -30,6 +31,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
              .use(ToastPlugin)
+            .use(MotionPlugin)
              .component('QuillEditor', QuillEditor)
             .mount(el);
     },

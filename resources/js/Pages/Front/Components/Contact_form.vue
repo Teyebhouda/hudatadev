@@ -1,338 +1,165 @@
 <template>
-  <section
-    class="relative bg-center bg-cover bg-fixed contact-section py-16 px-4 sm:py-20 sm:px-8 lg:px-12"
-    role="region"
-    aria-labelledby="contact-title"
-    ref="contactSection"
-    id="contact-form"
-  >
-    <!-- Overlay -->
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm z-0" aria-hidden="true"></div>
+  <section id="contact-form" class="relative bg-[#f0f4f8] py-28 px-6 sm:px-10 lg:px-20 overflow-visible">
+    <!-- grand mot en arrière-plan -->
+    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">Ensemble</h2>
 
-    <!-- Contenu -->
-    <div class="relative z-10 max-w-screen-xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-      
-      <!-- Bloc gauche (texte) -->
-      <div class="text-white">
-        <h2 id="contact-title" class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
-          Transformez vos idées en <span class="text-secondary">réalité</span>
-        </h2>
-        <div class="w-12 h-1 bg-secondary mt-3 rounded-full mb-8" aria-hidden="true"></div>
-        <p class="text-base sm:text-lg leading-relaxed">
-          Que vous ayez un projet concret ou juste une idée, notre équipe est prête à vous accompagner à chaque étape.
-        </p>
-        <p class="mt-3 italic text-gray-300 text-sm sm:text-base">
-          Ensemble, donnons vie à votre vision avec créativité et expertise.
-        </p>
+    <div class="relative max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- gauche : texte principal -->
+        <div class="lg:col-span-8">
+          <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#3f5360] leading-tight">
+            Créons quelque chose ensemble
+          </p>
+          <div class="mt-4 flex items-center gap-6">
+            <div class="h-[2px] w-36 bg-[#c98f60]"></div>
+            <p class="text-lg text-[#5c6670] max-w-xl">
+              Partagez vos idées — je conçois et développe des produits élégants et évolutifs qui enchantent les utilisateurs.
+            </p>
+          </div>
+        </div>
+
+        <!-- droite : CTA -->
+        <div class="lg:col-span-4 flex justify-start lg:justify-end">
+          <a
+            @click="open = true"
+            class="text-[#c98f60] font-semibold hover:text-[#b7794f] text-lg transition-colors"
+          >
+            Contactez-moi &rarr;
+          </a>
+        </div>
       </div>
 
-      <!-- Bloc droit (formulaire) -->
-      <div class="relative overflow-visible max-h-[90vh] lg:max-h-none pr-4 sm:pr-6">
-        
-      <!-- Étape 0 -->
-<div v-if="step === 0" class="space-y-6 pb-8 flex flex-col items-center text-center h-full justify-center">
- 
-  <p class="text-gray-100 text-base sm:text-lg max-w-sm">
-    Dites-nous ce que vous avez en tête. Nous vous répondrons rapidement avec des idées concrètes !
-  </p>
-
-  <button
-    @click="step = 1"
-    class="px-6 py-3 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary/90 hover:-translate-y-1 transition transform duration-300 focus:outline-none focus:ring-2 focus:ring-primary/70"
-    aria-label="Commencer une demande de projet"
-  >
-    Faire une demande
-  </button>
-</div>
-
-
-        <!-- Étape 1 : choix service -->
-        <transition name="fade" mode="out-in">
-          <div v-if="step === 1" class="space-y-6 sm:space-y-8 pb-10">
-            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Quel type de projet ?</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <button
-                v-for="(type, index) in services"
-                :key="index"
-                @click="form.service = type.title"
-                :class="[ 
-                  'py-3 sm:py-4 px-4 sm:px-6 rounded-xl border font-semibold text-left transition-all duration-300 w-full transform origin-center',
-                  form.service === type.title
-                    ? 'bg-primary text-white border-primary shadow-lg hover:shadow-xl'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300 hover:shadow-md hover:-translate-y-1'
-                ]"
-                :aria-pressed="form.service === type.title"
-              >
-                {{ type.title }}
-              </button>
-            </div>
-            <p v-if="errors.service" class="text-red-500 text-sm mt-1">{{ errors.service }}</p>
-            <div class="text-right mt-4 sm:mt-6">
-              <button
-                :disabled="!form.service"
-                @click="step++"
-                class="bg-primary text-white py-3 px-6 sm:px-8 rounded-full font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition duration-300"
-              >
-                Suivant
-              </button>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Étape 2 : message projet -->
-        <transition name="fade" mode="out-in">
-          <div v-if="step === 2" class="space-y-6 sm:space-y-8 pb-10">
-            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Parlez-nous de votre projet</h3>
-            <textarea
-              v-model="form.message"
-              rows="5"
-              placeholder="Décrivez votre projet ici..."
-              class="w-full p-4 sm:p-5 rounded-xl bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-secondary/30 transition"
-              @blur="validateField('message')"
-            ></textarea>
-            <p v-if="errors.message" class="text-red-500 text-sm mt-1">{{ errors.message }}</p>
-            <div class="flex justify-between items-center mt-2 sm:mt-4">
-              <button
-                @click="step--"
-                class="text-sm text-gray-800 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
-              >
-                Précédent
-              </button>
-              <button
-                :disabled="!form.message"
-                @click="step++"
-                class="bg-primary text-white py-3 px-6 sm:px-8 rounded-full font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition duration-300"
-              >
-                Suivant
-              </button>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Étape 3 : coordonnées -->
-        <transition name="fade" mode="out-in">
-          <div v-if="step === 3" class="space-y-6 sm:space-y-8 pb-10">
-            <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Vos coordonnées</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <input
-                  v-model="form.nom"
-                  type="text"
-                  placeholder="Nom complet"
-                  class="input w-full"
-                  @blur="validateField('nom')"
-                />
-                <p v-if="errors.nom" class="text-red-500 text-sm mt-1">{{ errors.nom }}</p>
-              </div>
-              <div>
-                <input
-                  v-model="form.email"
-                  type="email"
-                  placeholder="Email"
-                  class="input w-full"
-                  @blur="validateField('email')"
-                />
-                <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
-              </div>
-              <div>
-                <input
-                  v-model="form.telephone"
-                  type="tel"
-                  placeholder="Téléphone"
-                  class="input w-full"
-                  @blur="validateField('telephone')"
-                />
-                <p v-if="errors.telephone" class="text-red-500 text-sm mt-1">{{ errors.telephone }}</p>
-              </div>
-              <div>
-                <input
-                  v-model="form.entreprise"
-                  type="text"
-                  placeholder="Entreprise"
-                  class="input w-full"
-                  @blur="validateField('entreprise')"
-                />
-                <p v-if="errors.entreprise" class="text-red-500 text-sm mt-1">{{ errors.entreprise }}</p>
-              </div>
-
-            </div>
-            <div class="flex justify-between items-center mt-2 sm:mt-4">
-              <button
-                @click="step--"
-                class="text-sm text-gray-800 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-secondary rounded"
-              >
-                Précédent
-              </button>
-              <button
-                @click="submitForm"
-                :disabled="loading || !isFormValid"
-                class="bg-primary text-white py-3 px-6 sm:px-8 rounded-full font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
-              >
-                <span v-if="loading" class="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-5 h-5"></span>
-                {{ loading ? 'Envoi...' : 'Envoyer' }}
-              </button>
-            </div>
-          </div>
-        </transition>
+      <!-- Réseaux sociaux -->
+      <div class="mt-12 flex justify-center gap-8">
+        <!-- Les icônes restent les mêmes -->
       </div>
     </div>
 
-    <!-- Modale confirmation -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 px-4"
-    >
-     
-      <div class="bg-white text-gray-800 rounded-2xl shadow-2xl p-8 sm:p-10 max-w-md w-full text-center relative">
-        <!-- Logo centré en haut du modal -->
-    <ApplicationLogo class="mx-auto h-16 w-auto mb-4" />
-    
-        <h2 class="text-2xl sm:text-3xl font-bold mb-4">Merci pour votre demande</h2>
-        <p class="mb-6 text-gray-600">{{ modalMessage }}</p>
-        <button
-          @click="closeModal"
-          class="bg-primary text-white py-3 px-8 rounded-full font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition"
-        >
-          Fermer
-        </button>
+    <!-- Modal formulaire -->
+    <transition name="fade-scale">
+      <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" @click="open = false" aria-hidden="true"></div>
+
+        <form @submit.prevent="handleSubmit" class="relative bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 sm:p-10 z-10">
+          <button type="button" class="absolute right-4 top-4 text-[#5c6670] hover:text-[#3f5360]" @click="open = false" aria-label="Fermer">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+
+          <h3 class="text-2xl font-bold text-[#3f5360] mb-2">Envoyez un message</h3>
+          <p class="text-sm text-[#5c6670] mb-6">Décrivez brièvement votre projet et je vous répondrai sous 1 à 2 jours ouvrés.</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input v-model="form.nom" type="text" placeholder="Nom complet" class="input" />
+            <input v-model="form.email" type="email" placeholder="Email" class="input" />
+            <input v-model="form.telephone" type="tel" placeholder="Téléphone (facultatif)" class="input sm:col-span-2" />
+            <select v-model="form.service" class="input sm:col-span-2">
+              <option value="">Choisissez un service</option>
+              <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
+            </select>
+            <textarea v-model="form.message" rows="4" placeholder="Votre message..." class="input sm:col-span-2"></textarea>
+          </div>
+
+          <div class="mt-6 flex items-center justify-between gap-4">
+            <div class="text-sm text-red-500" v-if="errorText">{{ errorText }}</div>
+            <button type="submit" :disabled="loading" class="ml-auto inline-flex items-center gap-3 px-5 py-3 bg-[#3f5360] text-white rounded-full hover:bg-[#5c6670] transition">
+              <span v-if="loading" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              {{ loading ? 'Envoi...' : 'Envoyer le message' }}
+            </button>
+          </div>
+        </form>
       </div>
-    </div>
+    </transition>
   </section>
 </template>
 
 <script setup>
-import { reactive, ref, computed, watch } from 'vue'
+import { ref, reactive } from 'vue'
 import axios from 'axios'
-import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 
-const props = defineProps({
-  services: { type: Array, default: () => [] },
-})
+const services = ['Site web', 'Application mobile', 'Design', 'Consultation']
 
-const step = ref(0)
+const open = ref(false)
 const loading = ref(false)
-const showModal = ref(false)
-const modalMessage = ref('Votre demande a bien été envoyée. Nous vous contacterons rapidement.')
+const errorText = ref('')
 
 const form = reactive({
   nom: '',
   email: '',
   telephone: '',
-  entreprise: '',
   service: '',
   message: ''
 })
 
-const errors = reactive({
-  nom: '',
-  email: '',
-  telephone: '',
-  service: '',
-  message: ''
-})
-
-const validateField = (field) => {
-  switch(field){
-    case 'nom':
-      errors.nom = form.nom.trim() ? '' : 'Le nom est requis.'
-      break;
-    case 'email':
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if(!form.email.trim()) errors.email = 'L\'email est requis.'
-      else if(!emailPattern.test(form.email)) errors.email = 'Email invalide.'
-      else errors.email = ''
-      break;
-   case 'telephone':
-  const phonePattern = /^\+?[0-9\s.-]{6,15}$/ 
-  if (!form.telephone.trim()) {
-    errors.telephone = 'Le téléphone est requis.'
-  } else if (!phonePattern.test(form.telephone)) {
-    errors.telephone = 'Téléphone invalide.'
-  } else {
-    errors.telephone = ''
-  }
-  break;
-
-    case 'service':
-      errors.service = form.service ? '' : 'Veuillez choisir un service.'
-      break;
-    case 'message':
-      errors.message = form.message.trim() ? '' : 'Le message est requis.'
-      break;
-    case 'entreprise':
-      errors.entreprise = form.entreprise.trim() ? '' : 'Le nom de l\'entreprise est requis.'
-      break;
-  }
+function resetForm() {
+  form.nom = ''
+  form.email = ''
+  form.telephone = ''
+  form.service = ''
+  form.message = ''
+  errorText.value = ''
 }
 
-const isFormValid = computed(() => {
-  validateField('nom')
-  validateField('email')
-  validateField('telephone')
-  validateField('service')
-  validateField('message')
-  validateField('entreprise')
-  return !errors.nom && !errors.email && !errors.telephone && !errors.service && !errors.message && !errors.entreprise
-})
-
-watch(form, (newVal) => {
-  Object.keys(newVal).forEach(field => validateField(field))
-}, { deep: true })
-
-const submitForm = async () => {
-  if(!isFormValid.value) return
-
+async function handleSubmit() {
+  errorText.value = ''
+  if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) {
+    errorText.value = 'Veuillez remplir le nom, l’email et le message.'
+    return
+  }
   loading.value = true
   try {
-    const response = await axios.post(route('contact.send'), form, {
-      headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
+    await axios.post(route('contact.send'), form, {
+      headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' }
     })
-    if (response.data.success) {
-      showModal.value = true
-      Object.keys(form).forEach(key => form[key] = '')
-      step.value = 0
-    } else {
-      modalMessage.value = 'Une erreur est survenue. Merci de réessayer.'
-      showModal.value = true
-    }
-  } catch (error) {
-    modalMessage.value = "Erreur lors de l'envoi. Merci de vérifier vos informations."
-    showModal.value = true
+    resetForm()
+    open.value = false
+  } catch (e) {
+    errorText.value = "Une erreur est survenue. Veuillez réessayer."
   } finally {
     loading.value = false
   }
 }
-
-const closeModal = () => showModal.value = false
 </script>
 
 <style scoped>
+.hero-bg-word {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 800;
+  color: rgba(63, 83, 96, 0.06);
+  letter-spacing: -0.02em;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* inputs */
 .input {
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
-  padding: 0.75rem;
+  background: #ffffff;
+  border: 1px solid #e6e8eb;
+  padding: 0.85rem 1rem;
   border-radius: 0.75rem;
-  color: #111827;
-  transition: all 0.3s ease;
+  color: #3f5360;
+  transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
 }
 .input:focus {
-  border-color: #f97316;
-  box-shadow: 0 0 0 4px rgba(249,115,22,0.2);
   outline: none;
+  box-shadow: 0 6px 18px rgba(63,83,96,0.06);
+  border-color: #3f5360;
+  transform: translateY(-1px);
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.4s ease;
+/* modal transition */
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: all .22s ease;
 }
-.fade-enter-from { opacity: 0; transform: translateY(20px); }
-.fade-leave-to { opacity: 0; transform: translateY(-10px); }
-.fade-enter-to, .fade-leave-from { opacity: 1; transform: translateY(0); }
-
-.contact-section {
-  background-image: url('/images/bg-12.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-}
+.fade-scale-enter-from { opacity: 0; transform: translateY(8px) scale(.98); }
+.fade-scale-enter-to { opacity: 1; transform: translateY(0) scale(1); }
+.fade-scale-leave-from { opacity: 1; transform: translateY(0) scale(1); }
+.fade-scale-leave-to { opacity: 0; transform: translateY(6px) scale(.98); }
 </style>

@@ -8,6 +8,7 @@ const form = useForm({
   description: '',
   location: '',
   date: '',
+  link: '',
   images: [],
   content: '',
    meta_title: '',
@@ -24,6 +25,7 @@ const submit = () => {
   formData.append("description", form.description)
   formData.append("location", form.location)
   formData.append("date", form.date)
+  formData.append("link", form.link) 
   formData.append("content", form.content)
 
   form.images.forEach((file, i) => {
@@ -71,6 +73,7 @@ const removeFile = (index) => {
               />
       <input v-model="form.location" type="text" placeholder="Lieu" class="w-full border rounded p-2" />
       <input v-model="form.date" type="date" class="w-full border rounded p-2" />
+      <input v-model="form.link" type="text" placeholder="Lien du projet" class="w-full border rounded p-2" />
 
       <!-- Upload -->
       <input type="file" multiple @change="handleFiles" class="w-full border p-2" />

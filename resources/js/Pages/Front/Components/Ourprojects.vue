@@ -1,172 +1,163 @@
 <template>
   <section
     id="projects-section"
-    class="bg-white mt-12 py-20 px-6"
+    class="relative bg-gradient-to-b from-[#f0f4f8] to-white py-12 px-6 sm:px-10 lg:px-20 overflow-visible"
     role="region"
     aria-labelledby="projects-title"
   >
-    <!-- Wave transition -->
-    <div class="absolute -top-12 w-full overflow-hidden leading-[0]">
-      <svg class="relative block w-full h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 120">
-        <path d="M0 0c144.3 62.1 286.9 79.9 432 60 172.7-24 343.7-72 520 4 82.1 38.2 161 60 248 54 56.4-3.9 109.3-21 168-43 48.9-19.6 106.4-44.2 132-69V120H0V0z" fill="currentColor"/>
-      </svg>
-    </div>
+    <!-- large faint background word -->
+    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">Projects</h2>
 
-    <div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16">
-      
-      <!-- Bloc gauche sticky -->
-      <div
-        class="flex flex-col justify-start md:sticky max-h-[calc(100vh-6rem)] overflow-visible h-fit"
-        :style="{ top: isCompact ? '4.5rem' : '6rem' }"
-      >
-        <div class="mb-16 text-left">
-          
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight"
-            tabindex="0"
-          >
-           {{ content.title }}
-          </h2>
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-14 h-1 bg-primary rounded-full"></div>
-            <span class="text-gray-400 text-sm uppercase tracking-widest">{{ content.subtitle }}</span>
-          </div>
-          <p class="text-gray-700 text-lg leading-relaxed mb-4" tabindex="0">
-{{ content.description }}
-          </p>
-         
-        </div>
+    <div class="relative max-w-6xl mx-auto text-center mb-12">
+      <!-- Titre -->
+      <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#3f5360] leading-tight">
+        {{ content.title }}
+      </p>
 
-        <!-- CTA corrigé -->
-        <a
-          href="/projects"
-          class="inline-flex items-center gap-2 bg-primary text-white font-medium px-6 py-3 rounded-xl shadow-lg hover:bg-primary/90 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-primary/50 transform"
-          role="button"
-          tabindex="0"
-          aria-label="Voir tous les projets"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-          Voir tous les projets
-        </a>
+      <!-- Séparateur + Description -->
+      <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="h-[2px] w-24 sm:w-36 bg-[#c98f60]"></div>
+        <p class="text-lg text-[#5c6670] max-w-2xl">
+          {{ content.description }}
+        </p>
       </div>
 
-      <!-- Masonry corrigé -->
-      <div class="columns-1 sm:columns-2 gap-6 space-y-6" role="list" aria-label="Liste des projets">
-        <article
-          v-for="(project, index) in content.items.slice(0, 6)"
-          :key="project.id"
-          class="relative group rounded-xl overflow-hidden break-inside-avoid cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300"
-          :data-aos="index % 2 === 0 ? 'fade-up' : 'fade-down'"
-          role="listitem"
-          tabindex="0"
-          :aria-label="`Projet: ${project.title}`"
-        >
-          <a
-            :href="`/projects/${project.slug}`"
-            class="block"
-            :aria-label="`Voir les détails du projet ${project.title}`"
-          >
-            <!-- Image corrigée -->
-            <img
-              v-if="project.images.length"
-              :src="`/storage/${project.images[0].path}`"
-              :alt="project.title"
-              class="w-full h-96 object-cover rounded-xl transition-all duration-500 transform group-hover:scale-105 group-hover:-translate-y-1"
-              loading="lazy"
-            />
-            <div
-              v-else
-              class="w-full h-96 bg-gray-200 flex items-center justify-center text-gray-500 text-sm italic"
-              aria-label="Aucune image disponible"
-            >
-              Aucune image disponible
-            </div>
-
-            <!-- Overlay -->
-            <div
-              class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/30 to-transparent backdrop-blur-s p-5
-                translate-y-4 group-hover:translate-y-0 transition-all duration-500 ease-in-out"
-              aria-hidden="true"
-            >
-              <h3 class="text-white text-xl font-bold drop-shadow-md">{{ project.title }}</h3>
-              <p class="text-gray-200 text-sm line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" tabindex="0">
-                {{ project.description }}
-              </p>
-              <div
-                class="flex justify-between text-gray-300 text-xs mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                tabindex="0"
-              >
-                <span aria-label="Lieu du projet">📍 {{ project.location }}</span>
-                <span aria-label="Date du projet">📅 {{ formatDate(project.date) }}</span>
-              </div>
-            </div>
-          </a>
-        </article>
-      </div>
+     
     </div>
+
+    <!-- Swiper Coverflow -->
+    <swiper
+      :effect="'coverflow'"
+      :grabCursor="true"
+      :centeredSlides="true"
+      :slidesPerView="'auto'"
+      :loop="true"
+      :coverflowEffect="{
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true
+      }"
+      :pagination="{ clickable: true }"
+      :modules="modules"
+      class="mySwiper"
+    >
+    <swiper-slide
+  v-for="project in content.items"
+  :key="project.id"
+  class="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"
+>
+  <div
+    class="absolute inset-0 bg-[#3f5360]/10 backdrop-blur-md z-0 rounded-2xl"
+    aria-hidden="true"
+  ></div>
+
+  <img
+    v-if="project.images.length"
+    :src="`/storage/${project.images[0].path}`"
+    :alt="project.title"
+    class="w-full h-60 object-cover relative z-10"
+    loading="lazy"
+  />
+  <div
+    v-else
+    class="w-full h-60 bg-[#f0f4f8] flex items-center justify-center text-[#5c6670] text-sm italic relative z-10"
+  >
+    Aucune image disponible
+  </div>
+
+  <div class="p-5 bg-white relative z-10">
+    <h3 class="text-lg font-semibold text-[#3f5360] mb-1">
+      {{ project.title }}
+    </h3>
+
+    <!-- Description courte affichée totalement -->
+    <p class="text-[#5c6670] text-sm mb-3">
+      {{ project.description }}
+    </p>
+
+    <!-- Description longue affichée totalement -->
+    <p class="text-[#5c6670] text-sm mb-3">
+      {{ project.long_description }}
+    </p>
+
+    <!-- Lien direct vers le site -->
+    <a
+      :href="project.link"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-block text-[#c98f60] hover:text-[#b7794f] font-semibold text-sm transition-colors"
+    >
+      Visiter le site &rarr;
+    </a>
+  </div>
+</swiper-slide>
+
+
+    </swiper>
   </section>
 </template>
 
-
 <script setup>
-import { defineProps, onMounted, watch, nextTick, ref } from "vue"
-import AOS from "aos"
-import "aos/dist/aos.css"
+import { defineProps } from "vue"
+import { Swiper, SwiperSlide } from "swiper/vue"
+import "swiper/css"
+import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
+import { EffectCoverflow, Pagination } from "swiper/modules"
 
 const props = defineProps({
- 
   content: {
     type: Object,
     default: () => ({
       title: "Nos Projets",
-      subtitle: "Découvrez nos réalisations",
-      description: "Explorez une sélection de nos projets récents, illustrant notre expertise et notre engagement envers l'excellence dans chaque réalisation."
+      description: "Découvrez une sélection de nos projets récents...",
+      items: []
     })
   }
 })
 
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  })
-}
-
-const isCompact = ref(false)
-
-const handleScroll = () => {
-  isCompact.value = window.scrollY > 40
-}
-
-onMounted(async () => {
-  window.addEventListener('scroll', handleScroll)
-  await nextTick()
-  AOS.init({ duration: 1000, once: true })
-})
-
-watch(
-  () => props.content,
-  async () => {
-    await nextTick()
-    AOS.refresh()
-  }
-)
+const modules = [EffectCoverflow, Pagination]
 </script>
 
 <style scoped>
-.scroll-mt-28 {
-  scroll-margin-top: 6rem; /* hauteur de ton header desktop */
+.hero-bg-word {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  font-size: clamp(5rem, 11vw, 9rem);
+  font-weight: 800;
+  color: rgba(63, 83, 96, 0.06);
+  letter-spacing: -0.02em;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .scroll-mt-28 {
-    scroll-margin-top: 4.5rem; /* header mobile */
-  }
-}
-.transform {
-  transform-origin: center;
+.mySwiper {
+  width: 100%;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.swiper-slide {
+  width: 300px;
+ /* height: 340px;*/
+ height: auto;
+  border-radius: 1rem;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>

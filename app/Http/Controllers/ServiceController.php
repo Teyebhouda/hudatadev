@@ -67,6 +67,7 @@ class ServiceController extends Controller
 
 public function show($slug)
 {
+    //dd($slug);
     // ✅ Récupérer directement le service via le slug
     $service = Service::where('slug', $slug)
         ->select('id', 'title', 'slug', 'description', 'icon','background_image', 'long_description', 'meta_title', 'meta_description', 'meta_keywords')

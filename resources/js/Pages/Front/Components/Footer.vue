@@ -11,7 +11,7 @@ const props = defineProps({
 </script>
 
 <template>
-      <footer class="bg-gray-900 text-white text-center py-4">
+      <footer class="bg-[#3f5360] text-white text-center py-4">
         <nav class="mb-4">
           <a
             v-for="page in footerPages"

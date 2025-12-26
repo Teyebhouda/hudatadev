@@ -27,17 +27,19 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'content' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'date' => 'nullable|date',
+            'link' => 'nullable|string|max:500',
             'images.*' => 'file|mimes:jpeg,png,jpg,avif,webp|max:2048',
 
         ]);
         $request['slug'] = Str::slug($request['title']);
-        $project = Project::create($request->only(['title', 'description', 'content', 'location', 'date','slug','meta_title','meta_description','meta_keywords']));
+        $project = Project::create($request->only(['title', 'description', 'content', 'location', 'date','link','slug','meta_title','meta_description','meta_keywords']));
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
@@ -61,12 +63,14 @@ class ProjectController extends Controller
 
   public function update(Request $request, Project $project)
 {
+  //  dd($request->all());
     $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'nullable|string',
         'content' => 'nullable|string',
         'location' => 'nullable|string|max:255',
         'date' => 'nullable|date',
+        'link' => 'nullable|string',
         'images.*' => 'file|mimes:jpeg,png,jpg,webp,avif|max:2048',
         'removed_images' => 'array',
         'removed_images.*' => 'integer',
@@ -78,7 +82,7 @@ class ProjectController extends Controller
     ]);
     $request['slug'] = Str::slug($request['title']);
     // ✅ Mettre à jour les champs du projet
-    $project->update($request->only(['title', 'description','slug', 'content', 'location', 'date','meta_title','meta_description','meta_keywords']));
+    $project->update($request->only(['title', 'description', 'content', 'location', 'date','link','slug','meta_title','meta_description','meta_keywords']));
 
  
 
