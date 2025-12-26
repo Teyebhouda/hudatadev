@@ -95,7 +95,7 @@
 </swiper-slide>
 
 
-    </swiper>
+    </
   </section>
 </template>
 
