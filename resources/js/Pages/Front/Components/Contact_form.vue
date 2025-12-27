@@ -13,8 +13,7 @@
           <div class="mt-4 flex items-center gap-6">
             <div class="h-[2px] w-36 bg-[#c98f60]"></div>
             <p class="text-lg text-[#5c6670] max-w-xl">
-              Partagez vos idées — je conçois et développe des produits élégants et évolutifs qui enchantent les utilisateurs.
-            </p>
+           Partagez vos idées — ensemble, nous concevons et développons des produits élégants qui offrent une expérience utilisateur exceptionnelle. </p>
           </div>
         </div>
 
@@ -24,7 +23,7 @@
             @click="open = true"
             class="text-[#c98f60] font-semibold hover:text-[#b7794f] text-lg transition-colors"
           >
-            Contactez-moi &rarr;
+            Contactez-Nous &rarr;
           </a>
         </div>
       </div>

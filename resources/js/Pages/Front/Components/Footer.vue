@@ -22,6 +22,6 @@ const props = defineProps({
             {{ page.title }}
           </a>
         </nav>
-      <p>&copy; 2025 FSD BATIMENT - Tous droits réservés.</p>
+      <p>&copy; 2026 Hudata-dev - Tous droits réservés.</p>
     </footer>
 </template>

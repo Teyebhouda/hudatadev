@@ -5,6 +5,8 @@
 @tailwind utilities;
 
 
+
+
 .lazy-img {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
@@ -17,6 +19,7 @@
 html , body {
    font-family: 'Inter', sans-serif;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 /* Style bouton global */
 .btn-primary {

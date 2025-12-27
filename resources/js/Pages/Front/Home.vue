@@ -59,8 +59,43 @@ console.log('parallaxStatsContent', parallaxStatsContent.value)
 console.log('servicesitems', services.value)
 console.log('projects_items', projects.value)
 
+//scroll haut 
+const showScrollTop = ref(false)
+
+const handleScrollTopVisibility = () => {
+  showScrollTop.value = window.scrollY > 400
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScrollTopVisibility)
+})
+
+
 </script>
 <template>
+
+  <!-- Scroll to top -->
+<button
+  v-show="showScrollTop"
+  @click="scrollToTop"
+  aria-label="Retour en haut"
+  class="fixed bottom-28 right-6 z-50
+         w-12 h-12 rounded-full
+         bg-white border-2 border-[#c98f60]
+         text-[#c98f60]
+         flex items-center justify-center
+         shadow-lg
+         transition-all duration-300
+         hover:bg-[#c98f60] hover:text-white
+         hover:-translate-y-1"
+>
+  <i class="fas fa-arrow-up text-lg"></i>
+</button>
+
   <div class="min-h-screen flex flex-col text-gray-800">
    
 
@@ -81,7 +116,7 @@ console.log('projects_items', projects.value)
   href="#contact-form"
   class="fixed top-1/2 right-0 -translate-y-1/2 z-50 bg-white text-[#c98f60] font-semibold tracking-wide px-6 py-3 border-2 border-[#c98f60] rounded-l-full shadow-md hover:bg-[#c98f60] hover:text-white transition-all duration-300"
 >
-  Me contacter
+  Nous contacter
 </a>
 
 
@@ -125,15 +160,18 @@ console.log('projects_items', projects.value)
     <!-- Footer -->
     <Footer :footerPages="footerPages" />  
      <!-- Bouton WhatsApp flottant -->
-    <a
-      href="https://wa.me/3366212207"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="whatsapp-button group"
-      aria-label="Discuter sur WhatsApp"
-    >
-      <i class="fab fa-whatsapp text-3xl group-hover:scale-110 transition-transform"></i>
-    </a>
+   <!-- Bouton WhatsApp flottant -->
+<a
+  href="https://wa.me/+330766212207"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="Discuter sur WhatsApp"
+  class="whatsapp-button group"
+>
+  <i class="fab fa-whatsapp text-3xl z-10"></i>
+  <span class="whatsapp-pulse"></span>
+</a>
+
   </div>
 
 
@@ -161,28 +199,54 @@ main {
 .whatsapp-button {
   position: fixed;
   bottom: 24px;
-  left: 24px; /* 👈 placé à gauche */
-  background-color: white;
-  border: 2px solid #c98f60; /* cuivre */
-  color: #c98f60;
-  border-radius: 50px;
-  padding: 12px 18px;
+  left: 24px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #c98f60, #b7794f);
+  color: white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  box-shadow: 0 10px 25px rgba(201, 143, 96, 0.35);
   z-index: 1000;
-  overflow: hidden;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: visible;
 }
 
 .whatsapp-button:hover {
-  background-color: #c98f60;
-  color: white;
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 16px 32px rgba(201, 143, 96, 0.5);
 }
+
+/* Halo animé élégant */
+.whatsapp-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(201, 143, 96, 0.45);
+  animation: whatsappPulse 2.6s infinite;
+  z-index: 0;
+}
+
+@keyframes whatsappPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+
 
 </style>
 

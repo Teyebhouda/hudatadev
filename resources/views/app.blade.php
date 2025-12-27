@@ -6,9 +6,18 @@
          <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- <title inertia>{{ config('app.name', 'Laravel') }}</title> -->
 
-     <title>{{ $page['props']['seo']['meta_title'] ?? $page['props']['settings']['meta_title'] ?? 'FSD-bâtiment  | Entreprise  de bâtiment | Travaux de construction et rénovation' }}</title>
-<meta name="description" content="{{ $page['props']['seo']['meta_description'] ?? $page['props']['settings']['meta_description'] ?? 'Notre entreprise de bâtiment réalise vos travaux de construction, rénovation, plomberie, électricité et maçonnerie avec professionnalisme et qualité.' }}">
-<meta name="keywords" content="{{ $page['props']['seo']['meta_keywords'] ?? $page['props']['settings']['meta_keywords'] ?? 'Fsd bâtiment, entreprise bâtiment, rénovation, construction, plomberie, électricité, maçonnerie, peinture, travaux bâtiment' }}">
+     <title>{{ $page['props']['seo']['meta_title'] ?? $page['props']['settings']['meta_title'] ?? 'HuData Développement | Ingénierie logicielle & Développement Full-Stack | France | Paris' }}</title>
+<meta name="description" content="{{ $page['props']['seo']['meta_description'] ?? $page['props']['settings']['meta_description'] ?? 'HuData Développement, expert en ingénierie logicielle et développement full-stack. Création d’applications web et solutions numériques sur mesure.' }}">
+<meta name="keywords" content="{{ $page['props']['seo']['meta_keywords'] ?? $page['props']['settings']['meta_keywords'] ?? 'HuData Développement,
+développement logiciel,
+ingénierie logicielle,
+développement full-stack,
+applications web,
+solutions numériques,
+création site web,
+développeur web,
+architecture logicielle,
+solutions digitales sur mesure' }}">
  
         <!-- Fonts -->
          <link
@@ -19,6 +28,12 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
        <link rel="preload" as="image" href="/images/homepage/eDBCCWWEqWNuSccyycJcIR35AeY9buD23grBdaB9.png">
+
+<!-- favicon -->
+       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
 <!-- Exemple avec Inter -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
         <!-- Scripts -->

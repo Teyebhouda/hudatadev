@@ -36,7 +36,7 @@
         <img
           :src="$page.props.settings?.logo"
           alt="Hudata-Dev Logo"
-          class="h-20 md:h-16 object-contain"
+          class="h-20 md:h-24 object-contain"
         />
       </div>
 
@@ -44,9 +44,9 @@
       <nav class="hidden md:flex items-center gap-8 font-medium text-black">
         <a href="/" class="hover:text-blue-400 transition">Accueil</a>
         <a href="#services-section" class="hover:text-blue-400 transition">Services</a>
-        <a href="#projects" class="hover:text-blue-400 transition">Projets</a>
-        <a href="#about" class="hover:text-blue-400 transition">À propos</a>
-        <a href="#contact" class="hover:text-blue-400 transition">Contact</a>
+        <a href="#projects-section" class="hover:text-blue-400 transition">Projets</a>
+        <a href="#about-stats" class="hover:text-blue-400 transition">À propos</a>
+        <a href="#contact-form" class="hover:text-blue-400 transition">Contact</a>
       </nav>
 
       <!-- Mobile Hamburger -->
@@ -65,9 +65,9 @@
       >
         <a href="/" @click="closeMenu" class="hover:text-blue-400 transition">Accueil</a>
         <a href="#services-section" @click="closeMenu" class="hover:text-blue-400 transition">Services</a>
-        <a href="#projects" @click="closeMenu" class="hover:text-blue-400 transition">Projets</a>
-        <a href="#about" @click="closeMenu" class="hover:text-blue-400 transition">À propos</a>
-        <a href="#contact" @click="closeMenu" class="hover:text-blue-400 transition">Contact</a>
+        <a href="#projects-section" @click="closeMenu" class="hover:text-blue-400 transition">Projets</a>
+        <a href="#about-stats" @click="closeMenu" class="hover:text-blue-400 transition">À propos</a>
+        <a href="#contact-form" @click="closeMenu" class="hover:text-blue-400 transition">Contact</a>
         <!-- Coordonnées pour mobile -->
         <div class="flex flex-col gap-2 mt-4 text-sm text-gray-700">
           <div class="flex items-center gap-2"><i class="fas fa-phone-alt"></i> +33 6 12 34 56 78</div>

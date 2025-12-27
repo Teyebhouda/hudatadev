@@ -58,7 +58,7 @@
           href="#contact-form"
           class="px-8 py-3 rounded-full font-semibold text-[#c98f60] border border-[#c98f60]/50 hover:bg-[#c98f60]/10 transition-all duration-300"
         >
-          Me contacter
+          Nous contacter
       </a>
       </div>
     </div>
