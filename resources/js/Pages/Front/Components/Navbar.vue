@@ -12,18 +12,18 @@
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
             <i class="fas fa-phone-alt"></i>
-            <span>+33 6 12 34 56 78</span>
+            <span>+33 7 66 21 22 07</span>
           </div>
           <div class="flex items-center gap-2">
             <i class="fas fa-envelope"></i>
-            <span>contact@hudata-dev.com</span>
+            <span>contact@hudata-dev.fr</span>
           </div>
         </div>
 
         <!-- Réseaux sociaux -->
         <div class="flex items-center gap-4">
           <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-github"></i></a>
+          <a href="" class="hover:text-blue-400 transition"><i class="fab fa-github"></i></a>
           <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
         </div>
       </div>
