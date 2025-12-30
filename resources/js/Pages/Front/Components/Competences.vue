@@ -67,7 +67,7 @@ const skills = [
   { name: "Java EE", level: "Avancé", icon: DevicePhoneMobileIcon },
   { name: "Tailwind CSS", level: "Avancé", icon: CodeBracketIcon },
   { name: "Nuxt js", level: "Avancé", icon: ServerIcon },
-  { name: "React", level: "Intermédiaire", icon: CodeBracketIcon }
+  { name: "Blazor Csharp", level: "Intermédiaire", icon: CodeBracketIcon }
 ]
 </script>
 
