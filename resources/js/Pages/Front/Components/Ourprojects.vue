@@ -2,189 +2,162 @@
   <section
     id="projects-section"
     class="relative bg-gradient-to-b from-[#f0f4f8] to-white py-12 px-6 sm:px-10 lg:px-20 overflow-visible"
+    role="region"
+    aria-labelledby="projects-title"
   >
-    <!-- Background word -->
-    <h2 aria-hidden="true" class="hero-bg-word">Projects</h2>
+    <!-- large faint background word -->
+    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">Projects</h2>
 
-    <!-- Title -->
-    <div class="relative max-w-6xl mx-auto text-center mb-14">
-      <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360]">
+    <div class="relative max-w-6xl mx-auto text-center mb-12">
+      <!-- Titre -->
+      <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#3f5360] leading-tight">
         {{ content.title }}
       </p>
 
-      <div class="mt-4 flex items-center justify-center gap-4 flex-wrap">
-        <div class="h-[2px] w-24 bg-[#c98f60]"></div>
+      <!-- Séparateur + Description -->
+      <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div class="h-[2px] w-24 sm:w-36 bg-[#c98f60]"></div>
         <p class="text-lg text-[#5c6670] max-w-2xl">
           {{ content.description }}
         </p>
       </div>
+
+     
     </div>
 
-    <!-- Swiper -->
-    <Swiper
-      class="projects-swiper"
-      effect="coverflow"
-      :modules="modules"
+    <!-- Swiper Coverflow -->
+    <swiper
+      :effect="'coverflow'"
       :grabCursor="true"
       :centeredSlides="true"
       :slidesPerView="'auto'"
-      :loop="content.items.length > 3"
-      :initialSlide="0"
+      :loop="true"
       :coverflowEffect="{
-        rotate: 20,
-        stretch: 100,
-        depth: 240,
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
         modifier: 1,
-        slideShadows: false
+        slideShadows: true
       }"
       :pagination="{ clickable: true }"
+      :modules="modules"
+      class="mySwiper"
     >
-      <SwiperSlide
-        v-for="project in content.items"
-        :key="project.id"
-        class="project-slide"
-      >
-        <img
-          v-if="project.images?.length"
-          :src="`/storage/${project.images[0].path}`"
-          :alt="project.title"
-          class="slide-image"
-        />
+    <swiper-slide
+  v-for="project in content.items"
+  :key="project.id"
+  class="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white"
+>
+  <div
+    class="absolute inset-0 bg-[#3f5360]/10 backdrop-blur-md z-0 rounded-2xl"
+    aria-hidden="true"
+  ></div>
 
-        <div class="slide-content">
-          <h3 class="slide-title">{{ project.title }}</h3>
+  <img
+    v-if="project.images.length"
+    :src="`/storage/${project.images[0].path}`"
+    :alt="project.title"
+    class="w-full h-60 object-cover relative z-10"
+    loading="lazy"
+  />
+  <div
+    v-else
+    class="w-full h-60 bg-[#f0f4f8] flex items-center justify-center text-[#5c6670] text-sm italic relative z-10"
+  >
+    Aucune image disponible
+  </div>
 
-          <p class="slide-text">
-            {{ project.description }}
-          </p>
+  <div class="p-5 bg-white relative z-10">
+    <h3 class="text-lg font-semibold text-[#3f5360] mb-1">
+      {{ project.title }}
+    </h3>
 
-          <p class="slide-text text-sm opacity-90">
-            {{ project.long_description }}
-          </p>
+    <!-- Description courte affichée totalement -->
+    <p class="text-[#5c6670] text-sm mb-3">
+      {{ project.description }}
+    </p>
 
-          <a
-            :href="project.link"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="slide-link"
-          >
-            Visiter le site →
-          </a>
-        </div>
-      </SwiperSlide>
-    </Swiper>
+    <!-- Description longue affichée totalement -->
+    <p class="text-[#5c6670] text-sm mb-3">
+      {{ project.long_description }}
+    </p>
+
+    <!-- Lien direct vers le site -->
+    <a
+      :href="project.link"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-block text-[#c98f60] hover:text-[#b7794f] font-semibold text-sm transition-colors"
+    >
+      Visiter le site &rarr;
+    </a>
+  </div>
+</swiper-slide>
+
+
+    </swiper>
   </section>
 </template>
 
-
 <script setup>
+import { defineProps } from "vue"
 import { Swiper, SwiperSlide } from "swiper/vue"
-import { EffectCoverflow, Pagination } from "swiper/modules"
-
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
+import { EffectCoverflow, Pagination } from "swiper/modules"
 
-defineProps({
+const props = defineProps({
   content: {
     type: Object,
-    required: true
+    default: () => ({
+      title: "Nos Projets",
+      description: "Découvrez une sélection de nos projets récents...",
+      items: []
+    })
   }
 })
 
 const modules = [EffectCoverflow, Pagination]
 </script>
-<style scoped>
 
+<style scoped>
 .hero-bg-word {
   position: absolute;
-  top: 6%;
   left: 50%;
+  top: 10%;
   transform: translateX(-50%);
-  font-size: clamp(5rem, 12vw, 9rem);
+  font-size: clamp(5rem, 11vw, 9rem);
   font-weight: 800;
   color: rgba(63, 83, 96, 0.06);
+  letter-spacing: -0.02em;
+  line-height: 0.8;
   pointer-events: none;
+  user-select: none;
+  z-index: 0;
   white-space: nowrap;
 }
 
-/* Swiper container */
-.projects-swiper {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 4rem;
-}
-
-
-/* Slide */
-.project-slide {
-  width: 360px;
-  background: white;
-  border-radius: 1.25rem;
-  overflow: hidden;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-  transition: transform 0.45s ease, opacity 0.45s ease;
-}
-
-/* Active slide */
-.swiper-slide-active {
-  transform: scale(1.15);
-  z-index: 20;
-}
-
-/* Neighbours */
-.swiper-slide-prev,
-.swiper-slide-next {
-  opacity: 0.6;
-}
-
-/* Image */
-.slide-image {
+.mySwiper {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Content */
-.slide-content {
-  padding: 1.25rem;
+.swiper-slide {
+  width: 300px;
+ /* height: 340px;*/
+ height: auto;
+  border-radius: 1rem;
 }
 
-.slide-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #3f5360;
-  margin-bottom: 0.5rem;
-}
-
-.slide-text {
-  font-size: 0.9rem;
-  color: #5c6670;
-  margin-bottom: 0.6rem;
-}
-
-.slide-link {
-  display: inline-block;
-  margin-top: 0.5rem;
-  font-weight: 600;
-  color: #c98f60;
-  transition: color 0.2s ease;
-}
-
-.slide-link:hover {
-  color: #b7794f;
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-  .project-slide {
-    width: 85vw;
-  }
-
-  .swiper-slide-active {
-    transform: scale(1.05);
-  }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
