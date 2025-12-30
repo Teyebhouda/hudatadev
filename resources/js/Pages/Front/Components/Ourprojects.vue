@@ -157,6 +157,7 @@ const modules = [EffectCoverflow, Pagination]
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: calc();
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
