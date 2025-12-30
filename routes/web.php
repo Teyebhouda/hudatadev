@@ -56,12 +56,12 @@ Route::get('/pages/{id}/edit', [PagesController::class, 'edit'])->name('pages.ed
 
     Route::get('/admin/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/admin/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-
     Route::get('/admin/projects/create', [ProjectController::class, 'create'])->name('projects.create');
 Route::post('/admin/projects', [ProjectController::class, 'store'])->name('projects.store');
     Route::get('/admin/api/projects', [ProjectController::class, 'apiIndex'])->name('admin.projects.api');
 Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
-
+Route::delete('/admin/projects/{project}', [ProjectController::class, 'destroy'])
+    ->name('projects.destroy');
    });
    
 Route::get('/', [

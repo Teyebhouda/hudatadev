@@ -35,7 +35,7 @@ class ProjectController extends Controller
             'location' => 'nullable|string|max:255',
             'date' => 'nullable|date',
             'link' => 'nullable|string|max:500',
-            'images.*' => 'file|mimes:jpeg,png,jpg,avif,webp|max:2048',
+            'images.*' => 'file|mimes:jpeg,png,jpg,avif,webp',
 
         ]);
         $request['slug'] = Str::slug($request['title']);
@@ -71,7 +71,7 @@ class ProjectController extends Controller
         'location' => 'nullable|string|max:255',
         'date' => 'nullable|date',
         'link' => 'nullable|string',
-        'images.*' => 'file|mimes:jpeg,png,jpg,webp,avif|max:2048',
+        'images.*' => 'file|mimes:jpeg,png,jpg,webp,avif',
         'removed_images' => 'array',
         'removed_images.*' => 'integer',
         'meta_title' => 'nullable|string|max:255',
@@ -108,11 +108,19 @@ class ProjectController extends Controller
     return redirect()->route('projects.index')->with('success', 'Projet mis à jour');
 }
 
-    public function destroy(Project $project)
-    {
-        $project->delete();
-        return redirect()->route('projects.index')->with('success', 'Projet supprimé');
+   public function destroy(Project $project)
+{
+    foreach ($project->images as $img) {
+        Storage::disk('public')->delete($img->path);
+        $img->delete();
     }
+
+    $project->delete();
+
+    return redirect()->route('projects.index')
+        ->with('success', 'Projet supprimé avec succès');
+}
+
     public function apiIndex()
 {
     $projects = Project::select('id', 'title')->latest()->get();
