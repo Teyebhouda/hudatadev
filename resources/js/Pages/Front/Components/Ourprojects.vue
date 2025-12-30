@@ -35,11 +35,11 @@
   :loop="true"
   :initialSlide="0"
   :coverflowEffect="{
-    rotate: 25,
-  stretch: 80,   // 🔥 ESPACE ENTRE LES SLIDES
-  depth: 200,
-  modifier: 1,
-  slideShadows: false
+    rotate: 30,
+   stretch: 80,
+    depth: 180,
+    modifier: 1.2,
+    slideShadows: false
   }"
   :pagination="{ clickable: true }"
   :modules="modules"
@@ -163,11 +163,6 @@ const modules = [EffectCoverflow, Pagination]
 .swiper-slide-prev,
 .swiper-slide-next {
   opacity: 0.55;
-}
-@media (max-width: 640px) {
-  .swiper-slide {
-    width: 85vw;
-  }
 }
 
 
