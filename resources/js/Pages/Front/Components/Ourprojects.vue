@@ -26,23 +26,26 @@
     </div>
 
     <!-- Swiper Coverflow -->
-    <swiper
-      :effect="'coverflow'"
-      :grabCursor="true"
-      :centeredSlides="true"
-      :slidesPerView="'auto'"
-      :loop="true"
-      :coverflowEffect="{
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: true
-      }"
-      :pagination="{ clickable: true }"
-      :modules="modules"
-      class="mySwiper"
-    >
+  <swiper
+  :effect="'coverflow'"
+  :grabCursor="true"
+  :centeredSlides="true"
+  :slidesPerView="'auto'"
+  :loop="true"
+  :initialSlide="Math.floor(content.items.length / 2)"
+  :coverflowEffect="{
+    rotate: 50,
+    stretch: 0,
+    depth: 120,
+    modifier: 1,
+    slideShadows: false
+  }"
+  :pagination="{ clickable: true }"
+  :modules="modules"
+  class="mySwiper"
+  @swiper="onSwiperInit"
+>
+
     <swiper-slide
   v-for="project in content.items"
   :key="project.id"
@@ -107,6 +110,19 @@ import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
 import { EffectCoverflow, Pagination } from "swiper/modules"
 
+import { nextTick } from 'vue'
+
+const onSwiperInit = (swiper) => {
+  nextTick(() => {
+    swiper.update()
+    swiper.slideToLoop(
+      Math.floor(props.content.items.length / 2),
+      0
+    )
+  })
+}
+
+
 const props = defineProps({
   content: {
     type: Object,
@@ -146,7 +162,9 @@ const modules = [EffectCoverflow, Pagination]
   justify-content: center;
   align-items: center;
 }
-
+.swiper-wrapper {
+  align-items: center;
+}
 .swiper-slide {
   width: 300px;
  /* height: 340px;*/
