@@ -9,28 +9,27 @@
     <div class="bg-[#3f5360] text-white text-sm md:text-base">
       <div class="max-w-screen-xl mx-auto px-6 py-2 flex justify-between items-center">
         <!-- Coordonnées -->
-       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-  <!-- Téléphone -->
-  <a
+        <div class="flex items-center gap-6">
+          
+          <div class="flex items-center gap-2">
+            <a
     href="tel:+33766212207"
-    class="flex items-center gap-2 text-slate-700 hover:text-teal-600 transition-colors"
-    aria-label="Appeler Hudata Dev"
+   aria-label="Appeler Hudata Dev"
   >
-    <i class="fas fa-phone-alt"></i>
-    <span>+33 7 66 21 22 07</span>
-  </a>
-
-  <!-- Email -->
-  <a
+            <i class="fas fa-phone-alt"></i>
+            <span>+33 7 66 21 22 07</span>
+            </a>
+          </div>
+          <div class="flex items-center gap-2">
+             <a
     href="mailto:contact@hudata-dev.fr"
-    class="flex items-center gap-2 text-slate-700 hover:text-teal-600 transition-colors"
-    aria-label="Envoyer un email à Hudata Dev"
+   aria-label="Envoyer un email à Hudata Dev"
   >
-    <i class="fas fa-envelope"></i>
-    <span>contact@hudata-dev.fr</span>
-  </a>
-</div>
-
+            <i class="fas fa-envelope"></i>
+            <span>contact@hudata-dev.fr</span>
+            </a>
+          </div>
+        </div>
 
         <!-- Réseaux sociaux -->
         <div class="flex items-center gap-4">
