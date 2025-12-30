@@ -35,11 +35,11 @@
   :loop="true"
   :initialSlide="0"
   :coverflowEffect="{
-    rotate: 30,
-    stretch: 0,
-    depth: 180,
-    modifier: 1.2,
-    slideShadows: false
+    rotate: 25,
+  stretch: 80,   // 🔥 ESPACE ENTRE LES SLIDES
+  depth: 200,
+  modifier: 1,
+  slideShadows: false
   }"
   :pagination="{ clickable: true }"
   :modules="modules"
@@ -142,22 +142,19 @@ const modules = [EffectCoverflow, Pagination]
 }
 
 .mySwiper {
-  width: min(90vw, 360px);
- max-width: 100%;
-  padding-top: 2rem;
-  padding-bottom: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100vw;
+  max-width: 100%;
+  padding-top: 3rem;
+  padding-bottom: 4rem;
 }
 
 .swiper-slide {
-  width: 300px;
- /* height: 340px;*/
- height: auto;
+  width: 340px; /* largeur confortable */
+  height: auto;
   border-radius: 1rem;
-   transition: transform 0.4s ease, opacity 0.4s ease;
+  transition: transform 0.45s ease, opacity 0.45s ease;
 }
+
 .swiper-slide-active {
   transform: scale(1.15);
   z-index: 20;
@@ -165,8 +162,14 @@ const modules = [EffectCoverflow, Pagination]
 
 .swiper-slide-prev,
 .swiper-slide-next {
-  opacity: 0.6;
+  opacity: 0.55;
 }
+@media (max-width: 640px) {
+  .swiper-slide {
+    width: 85vw;
+  }
+}
+
 
 .line-clamp-2 {
   display: -webkit-box;
