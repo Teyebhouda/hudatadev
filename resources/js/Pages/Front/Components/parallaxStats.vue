@@ -61,16 +61,17 @@
       </div>
 
       <!-- Illustration -->
-      <div
-        v-if="content.image"
-        class="relative flex justify-center items-center w-full h-96 md:h-full"
-      >
-        <img
-          :src="content.image"
-          :alt="content.image_alt || 'Illustration valeurs Hudata Dev'"
-          class="rounded-2xl shadow-xl object-contain w-full h-full transition-transform duration-500 hover:scale-105"
-        />
-      </div>
+     <div
+  v-if="content.image"
+  class="relative w-full h-96 md:h-full overflow-hidden rounded-2xl shadow-xl"
+>
+  <img
+    :src="content.image"
+    :alt="content.image_alt || 'Illustration valeurs Hudata Dev'"
+    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+  />
+</div>
+
     </div>
   </section>
 </template>
