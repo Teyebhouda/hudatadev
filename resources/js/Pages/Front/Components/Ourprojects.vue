@@ -26,23 +26,26 @@
     </div>
 
     <!-- Swiper Coverflow -->
-    <swiper
-      :effect="'coverflow'"
-      :grabCursor="true"
-      :centeredSlides="true"
-      :slidesPerView="'auto'"
-      :loop="true"
-      :coverflowEffect="{
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: true
-      }"
-      :pagination="{ clickable: true }"
-      :modules="modules"
-      class="mySwiper"
-    >
+   <swiper
+  :effect="'coverflow'"
+  :grabCursor="true"
+  :centeredSlides="true"
+  :centeredSlidesBounds="true"
+  :slidesPerView="'auto'"
+  :loop="true"
+  :initialSlide="0"
+  :coverflowEffect="{
+    rotate: 30,
+    stretch: 0,
+    depth: 180,
+    modifier: 1.2,
+    slideShadows: false
+  }"
+  :pagination="{ clickable: true }"
+  :modules="modules"
+  class="mySwiper"
+>
+
     <swiper-slide
   v-for="project in content.items"
   :key="project.id"
@@ -139,9 +142,10 @@ const modules = [EffectCoverflow, Pagination]
 }
 
 .mySwiper {
-  width: 100%;
-  padding-top: 1.5rem;
-  padding-bottom: 2rem;
+  width: min(90vw, 360px);
+ max-width: 100%;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -152,6 +156,16 @@ const modules = [EffectCoverflow, Pagination]
  /* height: 340px;*/
  height: auto;
   border-radius: 1rem;
+   transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.swiper-slide-active {
+  transform: scale(1.15);
+  z-index: 20;
+}
+
+.swiper-slide-prev,
+.swiper-slide-next {
+  opacity: 0.6;
 }
 
 .line-clamp-2 {
