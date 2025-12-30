@@ -111,8 +111,12 @@ const modules = [EffectCoverflow, Pagination]
 /* Swiper container */
 .projects-swiper {
   width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   padding-bottom: 4rem;
 }
+
 
 /* Slide */
 .project-slide {
