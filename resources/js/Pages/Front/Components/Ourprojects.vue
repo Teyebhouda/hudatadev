@@ -1,19 +1,19 @@
 <template>
   <section
     id="projects-section"
-    class="relative bg-gradient-to-b from-[#f0f4f8] to-white py-12 px-6 sm:px-10 lg:px-20 overflow-visible"
+    class="relative bg-gradient-to-b from-[#f0f4f8] to-white py-16 px-6 sm:px-10 lg:px-20 overflow-hidden"
   >
-    <!-- Background title -->
+    <!-- Background word -->
     <h2 aria-hidden="true" class="hero-bg-word">Projects</h2>
 
     <!-- Title -->
-    <div class="relative max-w-6xl mx-auto text-center mb-14">
+    <div class="relative max-w-6xl mx-auto text-center mb-16">
       <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360]">
         {{ content.title }}
       </p>
 
       <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <div class="h-[2px] w-24 bg-[#c98f60]"></div>
+        <div class="h-[2px] w-24 bg-[#c98f60]" />
         <p class="text-lg text-[#5c6670] max-w-2xl">
           {{ content.description }}
         </p>
@@ -21,24 +21,34 @@
     </div>
 
     <!-- Swiper -->
-    <Swiper
-      class="projects-swiper"
-      effect="coverflow"
-      :modules="modules"
-      :grabCursor="true"
-      :centeredSlides="true"
-      :slidesPerView="'auto'"
-      :loop="content.items.length > 3"
-      :initialSlide="0"
-      :coverflowEffect="{
-        rotate: 20,
-        stretch: 90,
-        depth: 220,
-        modifier: 1,
-        slideShadows: false
-      }"
-      :pagination="{ clickable: true }"
-    >
+ <Swiper
+  class="projects-swiper"
+  effect="coverflow"
+  :modules="modules"
+  :grabCursor="true"
+
+  slidesPerView="auto"
+  :centeredSlides="true"
+  :spaceBetween="64"
+
+  :loop="true"
+  :initialSlide="initialIndex"
+
+  :speed="700"
+
+  :coverflowEffect="{
+    rotate: 0,
+    stretch: 0,
+    depth: 220,
+    modifier: 1,
+    slideShadows: false
+  }"
+
+  :pagination="{ clickable: true }"
+  @swiper="onSwiper"
+>
+
+
       <SwiperSlide
         v-for="project in content.items"
         :key="project.id"
@@ -77,12 +87,13 @@
 <script setup>
 import { Swiper, SwiperSlide } from "swiper/vue"
 import { EffectCoverflow, Pagination } from "swiper/modules"
+import { ref, nextTick } from "vue"
 
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
 
-defineProps({
+const props = defineProps({
   content: {
     type: Object,
     required: true
@@ -90,48 +101,104 @@ defineProps({
 })
 
 const modules = [EffectCoverflow, Pagination]
+const swiperInstance = ref(null)
+
+const initialIndex = Math.floor(props.content.items.length / 2)
+
+const onSwiper = async (swiper) => {
+  swiperInstance.value = swiper
+  await nextTick()
+
+  // 🔥 CENTRAGE RÉEL, PAS DE CLONE
+  swiper.slideToLoop(initialIndex, 0, false)
+}
+
 </script>
 
-<style scoped>
+
+
+
+<style>
 /* Background word */
 .hero-bg-word {
   position: absolute;
-  top: 6%;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
   font-size: clamp(5rem, 12vw, 9rem);
   font-weight: 800;
-  color: rgba(63, 83, 96, 0.06);
+  color: rgba(63, 83, 96, 0.05);
   pointer-events: none;
   white-space: nowrap;
 }
 
 /* Swiper container */
 .projects-swiper {
-  width: 100vw;
+  max-width: 100%;
+  margin: 0 auto;
   padding-bottom: 4rem;
+   position: relative;
+}
+.projects-swiper .swiper-wrapper {
+  display: flex;
+  align-items: center;
 }
 
-/* Slides */
+/* Pagination container */
+.projects-swiper .swiper-pagination {
+ position: absolute;
+  left: 50% !important;
+  transform: translateX(-50%);
+  bottom: 12px !important;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  width: auto !important;
+}
+
+/* Bullet */
+.projects-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #cbd5e1;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.projects-swiper .swiper-pagination-bullet-active {
+  width: 24px; /* PAS trop large */
+  border-radius: 999px;
+  background: linear-gradient(135deg, #c98f60, #b7793e);
+}
+
+
+
+/* Slide */
 .project-slide {
   width: 360px;
+  max-width: 90vw;
   background: white;
   border-radius: 1.25rem;
   overflow: hidden;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  transition: transform 0.45s ease, opacity 0.45s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
 }
 
 /* Active slide */
 .swiper-slide-active {
-  transform: scale(1.15);
-  z-index: 20;
+  transform: scale(1.05);
+  z-index: 30;
+  opacity: 1;
+  filter: none;
 }
 
-/* Neighbours */
-.swiper-slide-prev,
-.swiper-slide-next {
-  opacity: 0.6;
+/* Inactive slides */
+.swiper-slide:not(.swiper-slide-active) {
+  opacity: 0.65;
+  filter: blur(0.6px);
 }
 
 /* Image */
@@ -143,7 +210,7 @@ const modules = [EffectCoverflow, Pagination]
 
 /* Content */
 .slide-content {
-  padding: 1.25rem;
+  padding: 1.4rem;
 }
 
 .slide-title {
@@ -161,7 +228,7 @@ const modules = [EffectCoverflow, Pagination]
 
 .slide-link {
   display: inline-block;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   font-weight: 600;
   color: #c98f60;
 }
@@ -170,11 +237,16 @@ const modules = [EffectCoverflow, Pagination]
 @media (max-width: 640px) {
   .project-slide {
     width: 85vw;
+     margin: 0 16px;
   }
 
   .swiper-slide-active {
-    transform: scale(1.05);
+    transform: scale(1.02);
+  }
+
+  .swiper-slide:not(.swiper-slide-active) {
+    filter: none;
+    opacity: 0.7;
   }
 }
-
 </style>
