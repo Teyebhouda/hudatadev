@@ -166,12 +166,7 @@ function triggerToast() {
     showToast.value = false
   }, 3000)
 }
-// Écoute l'ouverture du modal pour afficher le toast après envoi réussi
-watch(open, (newVal, oldVal) => {
-  if (oldVal === true && newVal === false && !errorText.value) {
-    triggerToast()
-  }
-})
+
 </script>
 
 <style scoped>
