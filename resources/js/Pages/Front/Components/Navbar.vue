@@ -51,6 +51,7 @@
     <!-- Menu principal -->
     <div class="max-w-screen-xl mx-auto px-6 py-4 flex items-center justify-between bg-white/0 backdrop-blur-md">
       <!-- Logo -->
+       <a href="/" aria-label="Aller à l'accueil" class="flex-shrink-0">
       <div class="flex-shrink-0">
         <img
           :src="$page.props.settings?.logo"
@@ -58,13 +59,16 @@
           class="h-20 md:h-24 object-contain"
         />
       </div>
+      </a>
 
       <!-- Desktop Menu -->
       <nav class="hidden md:flex items-center gap-8 font-medium text-black">
         <a href="/" class="hover:text-blue-400 transition">Accueil</a>
+         <template v-if="isHome">
         <a href="#services-section" class="hover:text-blue-400 transition">Services</a>
         <a href="#projects-section" class="hover:text-blue-400 transition">Projets</a>
         <a href="#about-stats" class="hover:text-blue-400 transition">À propos</a>
+       </template>
         <a href="#contact-form" class="hover:text-blue-400 transition">Contact</a>
       </nav>
 
@@ -83,9 +87,12 @@
         class="md:hidden bg-white/90 backdrop-blur-md shadow-lg px-6 py-6 flex flex-col gap-4 font-medium text-black"
       >
         <a href="/" @click="closeMenu" class="hover:text-blue-400 transition">Accueil</a>
+
+          <template v-if="isHome">
         <a href="#services-section" @click="closeMenu" class="hover:text-blue-400 transition">Services</a>
         <a href="#projects-section" @click="closeMenu" class="hover:text-blue-400 transition">Projets</a>
         <a href="#about-stats" @click="closeMenu" class="hover:text-blue-400 transition">À propos</a>
+          </template>
         <a href="#contact-form" @click="closeMenu" class="hover:text-blue-400 transition">Contact</a>
         <!-- Coordonnées pour mobile -->
         <div class="flex flex-col gap-2 mt-4 text-sm text-gray-700">
@@ -104,6 +111,11 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import { computed } from "vue";
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage();
+const isHome = window.location.pathname === '/'
 
 const isMenuOpen = ref(false);
 const isHidden = ref(false);
