@@ -1,6 +1,6 @@
 <template>
   <section
-  id="hero"
+  id="hero" ref="heroSection"
   class="relative min-h-screen flex flex-col items-center justify-center text-center px-6
          bg-gradient-to-br from-[#fafbfc] to-[#f3f4f6] text-[#2b2e31] overflow-hidden"
 >

@@ -10,11 +10,40 @@ import AboutUs from './Components/Aboutus.vue'
 import Ourprojects from './Components/Ourprojects.vue'
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted , onBeforeUnmount } from 'vue'
 import ParallaxStats from './Components/parallaxStats.vue'
 import Topbar from './Components/Topbar.vue'
 import Competences from './Components/Competences.vue'
 import { useContactModal } from '@/Composables/useContactModal'
+
+
+const showContactButton = ref(false);
+const heroSection = ref(null);
+
+let observer = null;
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      showContactButton.value = !entry.isIntersecting;
+    },
+    { threshold: 0.1 }
+  );
+
+  if (heroSection.value) {
+    observer.observe(heroSection.value);
+  }
+
+  window.addEventListener('scroll', handleScrollTopVisibility);
+});
+
+onBeforeUnmount(() => {
+  if (observer && heroSection.value) {
+    observer.unobserve(heroSection.value);
+  }
+  window.removeEventListener('scroll', handleScrollTopVisibility);
+});
+
 
 const { isContactOpen } = useContactModal()
 
@@ -109,26 +138,23 @@ onMounted(() => {
  
     <!-- Contenu -->
 <main class="flex-1">
-
+<div ref="heroSection">
     <Hero
-  :content="heroContent"
-  :services="services"
-  @selectService="handleSelectService"
-/>
-<!-- Bouton flottant "Me contacter" -->
-<a
-  href="#"
-  @click.prevent="isContactOpen = true"
-  class="fixed top-1/2 right-0 -translate-y-1/2 z-50 bg-white text-[#c98f60] font-semibold tracking-wide px-6 py-3 border-2 border-[#c98f60] rounded-l-full shadow-md hover:bg-[#c98f60] hover:text-white transition-all duration-300"
->
-  Nous contacter
-</a>
-
-
-
-
-
-
+      :content="heroContent"
+      :services="services"
+      @selectService="handleSelectService"
+    />
+  </div>
+   
+ <!-- Bouton flottant "Me contacter" -->
+  <a
+    v-if="showContactButton"
+    href="#"
+    @click.prevent="isContactOpen = true"
+    class="fixed top-1/2 right-0 -translate-y-1/2 z-50 bg-white text-[#c98f60] font-semibold tracking-wide px-6 py-3 border-2 border-[#c98f60] rounded-l-full shadow-md hover:bg-[#c98f60] hover:text-white transition-all duration-300"
+  >
+    Nous contacter
+  </a>
 
 
 
