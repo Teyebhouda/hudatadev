@@ -20,6 +20,14 @@
             <span>+33 7 66 21 22 07</span>
             </a>
           </div>
+          <!-- Addresse France -->
+          <div class="flex items-center gap-2">
+            <a  href="https://goo.gl/maps/XYZ" target="_blank" rel="noopener" aria-label="Voir l'adresse de Hudata Dev sur Google Maps">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Paris, France</span>
+            </a>
+          </div>
+          <!-- Email -->
           <div class="flex items-center gap-2">
              <a
     href="mailto:contact@hudata-dev.fr"
@@ -34,8 +42,8 @@
         <!-- Réseaux sociaux -->
         <div class="flex items-center gap-4">
           <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-linkedin-in"></i></a>
-          <a href="" class="hover:text-blue-400 transition"><i class="fab fa-github"></i></a>
-          <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61586022465451" class="hover:text-blue-400 transition"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/hudata_dev/" class="hover:text-blue-400 transition"><i class="fab fa-instagram"></i></a>
         </div>
       </div>
     </div>
@@ -100,6 +108,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 const isMenuOpen = ref(false);
 const isHidden = ref(false);
 let lastScrollY = 0;
+const showTopBar = ref(false);
 
 const toggleMenu = () => { isMenuOpen.value = !isMenuOpen.value; };
 const closeMenu = () => { isMenuOpen.value = false; };

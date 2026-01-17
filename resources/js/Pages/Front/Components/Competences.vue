@@ -1,17 +1,15 @@
 <template>
-  <section id="skills-section" class="relative bg-white py-8  sm:px-10 lg:px-20 overflow-hidden">
-   
-
+  <section
+    id="skills-section"
+    class="relative w-full overflow-hidden py-10 sm:py-14 px-6 sm:px-10 lg:px-20 bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
+  >
     <Swiper
       :modules="[Autoplay]"
       :slides-per-view="5"
       :space-between="40"
       :loop="true"
       :speed="2500"
-      :autoplay="{
-        delay: 0,
-        disableOnInteraction: false
-      }"
+      :autoplay="{ delay: 0, disableOnInteraction: false }"
       :allowTouchMove="false"
       :breakpoints="{
         320: { slidesPerView: 2 },
@@ -28,19 +26,17 @@
       >
         <div
           :class="[
-            'bg-gray-50 rounded-xl p-8 shadow-md hover:shadow-xl transition-all duration-500 flex flex-col items-center w-44 cursor-pointer',
-            index % 2 === 0
-              ? 'rotate-[3deg] hover:rotate-0'
-              : '-rotate-[3deg] hover:rotate-0'
+            'bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-all duration-500 flex flex-col items-center w-44 cursor-pointer border border-[#e6e8ea]',
+            index % 2 === 0 ? 'rotate-[3deg] hover:rotate-0' : '-rotate-[3deg] hover:rotate-0'
           ]"
         >
-       <!--   <div class="text-primary mb-4">
-            <component :is="skill.icon" class="w-10 h-10" />
-          </div> -->
+          <div class="text-[#c98f60] mb-4">
+            <Icon :icon="skill.icon" class="w-10 h-10" />
+          </div>
+
           <h3 class="text-md font-semibold text-gray-900 text-center">
             {{ skill.name }}
           </h3>
-          <p class="text-gray-500 text-sm text-center">{{ skill.level }}</p>
         </div>
       </SwiperSlide>
     </Swiper>
@@ -53,36 +49,27 @@ import { Autoplay } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/autoplay"
 
-import {
-  CodeBracketIcon,
-  ServerIcon,
-  DevicePhoneMobileIcon
-} from "@heroicons/vue/24/outline"
+import { Icon } from "@iconify/vue"
 
 const skills = [
-  { name: "Laravel", level: "Expert", icon: CodeBracketIcon },
-  { name: "Vue.js", level: "Avancé", icon: CodeBracketIcon },
-  { name: "Symfony", level: "Intermédiaire", icon: ServerIcon },
-  { name: "Angular", level: "Intermédiaire", icon: CodeBracketIcon },
-  { name: "Java EE", level: "Avancé", icon: DevicePhoneMobileIcon },
-  { name: "Tailwind CSS", level: "Avancé", icon: CodeBracketIcon },
-  { name: "Nuxt js", level: "Avancé", icon: ServerIcon },
-  { name: "Blazor Csharp", level: "Intermédiaire", icon: CodeBracketIcon }
+  { name: "Laravel", icon: "logos:laravel" },
+  { name: "Vue.js", icon: "logos:vue" },
+  { name: "Symfony", icon: "logos:symfony" },
+  { name: "Angular", icon: "logos:angular-icon" },
+  { name: "Java EE", icon: "logos:java" },
+  { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+  { name: "Nuxt.js", icon: "logos:nuxt-icon" },
+  { name: "Blazor C#", icon: "logos:csharp" }
 ]
 </script>
 
 <style scoped>
-.text-primary {
-  color: rgb(79 70 229);
-}
-
-/* Swiper global */
 .skills-swiper {
   perspective: 1000px;
   overflow: hidden;
 }
 
 .skills-swiper .swiper-wrapper {
-  transition-timing-function: linear !important; /* mouvement continu */
+  transition-timing-function: linear !important;
 }
 </style>

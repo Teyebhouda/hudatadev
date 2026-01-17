@@ -1,7 +1,7 @@
 <template>
   <section
     id="projects-section"
-    class="relative bg-gradient-to-b from-[#f0f4f8] to-white py-16 px-6 sm:px-10 lg:px-20 overflow-hidden"
+    class="relative w-full overflow-hidden py-10 sm:py-14 px-6 sm:px-10 lg:px-20 bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
   >
     <!-- Background word -->
     <h2 aria-hidden="true" class="hero-bg-word">Projects</h2>

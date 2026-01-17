@@ -30,7 +30,7 @@
       <div
         v-for="(service, i) in content.items"
         :key="service.title"
-        class="group relative flex-1 min-w-[220px] max-w-[300px] flex flex-col justify-center items-center text-center transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden rounded-2xl p-6 sm:p-8 backdrop-blur-sm border border-[#d9dbdd]/60 shadow-sm"
+        class="group relative flex-1 min-w-[220px] max-w-[300px]  min-h-[300px] flex flex-col justify-center items-center text-center transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden rounded-2xl p-5 sm:p-6 backdrop-blur-sm border border-[#d9dbdd]/60 shadow-sm"
         :class="[ 
           i % 2 === 0
             ? 'bg-[#3f5360]/95 text-white hover:shadow-xl hover:scale-[1.03]'
@@ -39,7 +39,7 @@
       >
         <Icon
           :icon="service.icon"
-          class="w-10 h-10 sm:w-12 sm:h-12 mb-3 sm:mb-4 transition-transform duration-500 group-hover:scale-110 text-[#c98f60]"
+          class="w-9 h-9 sm:w-10 sm:h-10 mb-2 sm:mb-3 transition-transform duration-500 group-hover:scale-110 text-[#c98f60]"
         />
         <h3 class="text-lg sm:text-xl font-semibold mb-2 tracking-wide">
           {{ service.title }}
@@ -47,17 +47,20 @@
         <p class="max-w-xs mx-auto text-sm leading-relaxed opacity-90">
           {{ service.description }}
         </p>
-        <p class="max-w-xs mx-auto text-xs leading-relaxed mt-2 opacity-70 italic line-clamp-3"  v-html="service.long_description"
-        >
+       <p
+  class="max-w-xs mx-auto text-xs leading-relaxed mt-2 opacity-70 italic line-clamp-2"
+  v-html="service.long_description"
+>
+
         </p>
-        <div class="flex-grow">
+        
         <a
         :href="`/services/${service.slug}`"
           class="mt-4 inline-block text-sm font-medium text-[#c98f60] underline underline-offset-4 hover:text-[#a66e40] transition-colors"
         >
           En savoir plus
         </a>
-        </div>
+       
       </div>
     </div>
   </section>

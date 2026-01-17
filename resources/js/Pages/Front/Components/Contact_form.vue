@@ -15,17 +15,19 @@
             <p class="text-lg text-[#5c6670] max-w-xl">
            Partagez vos idées — ensemble, nous concevons et développons des produits élégants qui offrent une expérience utilisateur exceptionnelle. </p>
           </div>
+          <div class="mt-6 ml-10">
+  <a
+    @click="open = true"
+    class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition-colors"
+  >
+    Discutons de votre projet
+    <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
+  </a>
+</div>
+
         </div>
 
-        <!-- droite : CTA -->
-        <div class="lg:col-span-4 flex justify-start lg:justify-end">
-          <a
-            @click="open = true"
-            class="text-[#c98f60] font-semibold hover:text-[#b7794f] text-lg transition-colors"
-          >
-            Contactez-Nous &rarr;
-          </a>
-        </div>
+       
       </div>
 
       <!-- Réseaux sociaux -->
@@ -45,7 +47,7 @@
           </button>
 
           <h3 class="text-2xl font-bold text-[#3f5360] mb-2">Envoyez un message</h3>
-          <p class="text-sm text-[#5c6670] mb-6">Décrivez brièvement votre projet et je vous répondrai sous 1 à 2 jours ouvrés.</p>
+          <p class="text-sm text-[#5c6670] mb-6">Merci de décrivez brièvement votre projet et nous vous répondrons sous 1 à 2 jours ouvrés.</p>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input v-model="form.nom" type="text" placeholder="Nom complet" class="input" />
@@ -55,8 +57,17 @@
               <option value="">Choisissez un service</option>
               <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
             </select>
-            <textarea v-model="form.message" rows="4" placeholder="Votre message..." class="input sm:col-span-2"></textarea>
-          </div>
+
+            <textarea
+  v-model="form.message"
+  :placeholder="form.service === 'Autre'
+    ? 'Expliquez votre besoin spécifique...'
+    : 'Décrivez votre projet...'"
+  class="input sm:col-span-2"
+  rows="4"
+></textarea>
+
+</div>
 
           <div class="mt-6 flex items-center justify-between gap-4">
             <div class="text-sm text-red-500" v-if="errorText">{{ errorText }}</div>
@@ -68,16 +79,42 @@
         </form>
       </div>
     </transition>
+    <!-- Toast succès -->
+<transition name="toast">
+  <div
+    v-if="showToast"
+    class="fixed bottom-6 right-6 z-[60] flex items-center gap-3 bg-white border border-green-100 shadow-xl rounded-xl px-5 py-4"
+  >
+    <div class="flex items-center justify-center w-9 h-9 rounded-full bg-green-100 text-green-600">
+      ✔
+    </div>
+
+    <div>
+      <p class="font-semibold text-[#3f5360]">Message envoyé</p>
+      <p class="text-sm text-[#5c6670]">Merci pour votre message. Nous vous répondrons très bientôt.</p>
+    </div>
+  </div>
+</transition>
+
   </section>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import axios from 'axios'
+import { useContactModal } from '@/Composables/useContactModal'
+const { isContactOpen } = useContactModal()
 
-const services = ['Site web', 'Application mobile', 'Design', 'Consultation']
 
-const open = ref(false)
+const services = [
+  'Site web vitrine',
+  'Application mobile',
+  'Application web sur mesure (SaaS, dashboard)',
+  'UX / UI Design',
+  'Audit & consultation technique',
+  'Autre'
+]
+const open = isContactOpen
 const loading = ref(false)
 const errorText = ref('')
 
@@ -111,12 +148,30 @@ async function handleSubmit() {
     })
     resetForm()
     open.value = false
+    triggerToast()
   } catch (e) {
     errorText.value = "Une erreur est survenue. Veuillez réessayer."
   } finally {
     loading.value = false
   }
 }
+
+
+// Toast de succès
+const showToast = ref(false)
+
+function triggerToast() {
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
+}
+// Écoute l'ouverture du modal pour afficher le toast après envoi réussi
+watch(open, (newVal, oldVal) => {
+  if (oldVal === true && newVal === false && !errorText.value) {
+    triggerToast()
+  }
+})
 </script>
 
 <style scoped>
@@ -161,4 +216,32 @@ async function handleSubmit() {
 .fade-scale-enter-to { opacity: 1; transform: translateY(0) scale(1); }
 .fade-scale-leave-from { opacity: 1; transform: translateY(0) scale(1); }
 .fade-scale-leave-to { opacity: 0; transform: translateY(6px) scale(.98); }
+
+/* toast transition */
+/* toast animation */
+.toast-enter-active,
+.toast-leave-active {
+  transition: all .35s ease;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(12px) scale(0.95);
+}
+
+.toast-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+}
+
 </style>
