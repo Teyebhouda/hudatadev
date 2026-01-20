@@ -11,6 +11,11 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\Admin\ProjectController;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
+use App\Models\Page;
+use App\Models\Service;
+
 
 
 
@@ -76,5 +81,41 @@ Route::get('/pages/{slug}', [PagesController::class, 'show'])->name('pages.show'
 Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::post('/contact/sendcontact', [ContactController::class, 'sendcontact'])->name('contact.sendcontact');
 
+Route::get('/sitemap.xml', function () {
+    $sitemap = Sitemap::create();
+
+    // ✅ Pages dynamiques
+    $pages = Page::all(['slug', 'updated_at']);
+    foreach ($pages as $page) {
+        $sitemap->add(
+            Url::create(url("/pages/{$page->slug}"))
+                ->setLastModificationDate($page->updated_at)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                ->setPriority(0.8)
+        );
+    }
+
+    // ✅ project dynamiques
+  /*  $projects = Project::all(['slug', 'updated_at']);
+    foreach ($projects as $project) {
+        $sitemap->add(
+            Url::create(url("/projects/{$project->slug}"))
+                ->setLastModificationDate($project->updated_at)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                ->setPriority(0.9)
+        );
+    }*/
+     $services = Service::all(['slug', 'updated_at']);
+    foreach ($services as $service) {
+        $sitemap->add(
+            Url::create(url("/services/{$service->slug}"))
+                ->setLastModificationDate($service->updated_at)
+                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                ->setPriority(0.9)
+        );
+    }
+
+    return $sitemap->toResponse(request());
+});  
 
 require __DIR__.'/auth.php';
