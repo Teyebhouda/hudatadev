@@ -32,9 +32,11 @@
     </div>
 
     <!-- MAIN NAV -->
-    <div
-      class="h-16 md:h-auto bg-white/90 md:bg-white/0 backdrop-blur-md shadow-sm md:shadow-none"
-    >
+   <div
+  class="h-16 md:h-auto bg-transparent backdrop-blur-lg shadow-none"
+>
+
+
       <div class="max-w-screen-xl mx-auto px-6 h-full flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="flex items-center">
@@ -47,11 +49,11 @@
 
         <!-- Desktop Menu -->
         <nav class="hidden md:flex items-center gap-8 font-medium text-black">
-          <a href="/" class="hover:text-blue-500">Accueil</a>
-          <a v-if="isHome" href="#services-section" class="hover:text-blue-500">Services</a>
-          <a v-if="isHome" href="#projects-section" class="hover:text-blue-500">Projets</a>
-          <a v-if="isHome" href="#about-stats" class="hover:text-blue-500">À propos</a>
-          <a href="#contact-form" class="hover:text-blue-500">Contact</a>
+          <a href="/" class="hover:text-[#c98f60]">Accueil</a>
+          <a v-if="isHome" href="#services-section" class="hover:text-[#c98f60]">Services</a>
+          <a v-if="isHome" href="#projects-section" class="hover:text-[#c98f60]">Projets</a>
+          <a v-if="isHome" href="#about-stats" class="hover:text-[#c98f60]">À propos</a>
+          <a href="#contact-form" class="hover:text-[#c98f60]">Contact</a>
         </nav>
 
         <!-- Burger -->
