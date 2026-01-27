@@ -4,7 +4,7 @@
     class="relative w-full overflow-hidden py-10 sm:py-14 px-6 sm:px-10 lg:px-20 bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
   >
     <!-- Background word -->
-    <h2 aria-hidden="true" class="hero-bg-word">Projects</h2>
+    <h2 aria-hidden="true" class="hero-bg-word">Projets</h2>
 
     <!-- Title -->
     <div class="relative max-w-6xl mx-auto text-center mb-16">
