@@ -16,14 +16,21 @@
            Partagez vos idées — ensemble, nous concevons et développons des produits élégants qui offrent une expérience utilisateur exceptionnelle. </p>
           </div>
           <div class="mt-6 ml-10">
-  <a
-    @click="open = true"
-    class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition-colors"
-  >
-    Discutons de votre projet
-    <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
-  </a>
+<a
+  @click="open = true"
+  class="group inline-flex items-center gap-2
+         text-[#c98f60] font-semibold text-lg
+         cursor-pointer
+         hover:text-[#b7794f]
+         transition-colors"
+>
+  Discutons de votre projet
+  <span class="transition-transform duration-300 group-hover:translate-x-1">
+    →
+  </span>
+</a>
 </div>
+
 
         </div>
 

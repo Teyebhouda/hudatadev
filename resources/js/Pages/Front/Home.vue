@@ -147,14 +147,23 @@ onMounted(() => {
   </div>
    
  <!-- Bouton flottant "Me contacter" -->
-  <a
-    v-if="showContactButton"
-    href="#"
-    @click.prevent="isContactOpen = true"
-    class="fixed top-1/2 right-0 -translate-y-1/2 z-50 bg-white text-[#c98f60] font-semibold tracking-wide px-6 py-3 border-2 border-[#c98f60] rounded-l-full shadow-md hover:bg-[#c98f60] hover:text-white transition-all duration-300"
-  >
-    Nous contacter
-  </a>
+ <a
+  v-if="showContactButton"
+  href="#"
+  @click.prevent="isContactOpen = true"
+  class="hidden md:flex
+         fixed top-1/2 right-0 -translate-y-1/2 z-40
+         bg-white text-[#c98f60]
+         font-semibold tracking-wide
+         px-6 py-3
+         border-2 border-[#c98f60]
+         rounded-l-full
+         shadow-md
+         hover:bg-[#c98f60] hover:text-white
+         transition-all duration-300"
+>
+  Nous contacter
+</a>
 
 
 
