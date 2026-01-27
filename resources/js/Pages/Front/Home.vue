@@ -153,17 +153,20 @@ onMounted(() => {
   @click.prevent="isContactOpen = true"
   class="hidden md:flex
          fixed top-1/2 right-0 -translate-y-1/2 z-40
-         bg-white text-[#c98f60]
-         font-semibold tracking-wide
-         px-6 py-3
-         border-2 border-[#c98f60]
+         bg-white/90 backdrop-blur
+         text-[#c98f60]
+         font-bold
+         text-xs
+         px-3 py-2
+         border border-[#c98f60]
          rounded-l-full
-         shadow-md
+         shadow
          hover:bg-[#c98f60] hover:text-white
          transition-all duration-300"
 >
   Nous contacter
 </a>
+
 
 
 
