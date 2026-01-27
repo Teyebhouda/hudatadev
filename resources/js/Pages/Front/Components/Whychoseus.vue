@@ -62,6 +62,3 @@ const bgStyle = {
 }
 </script>
 
-<style scoped>
-/* Aucun style additionnel requis ici */
-</style>
