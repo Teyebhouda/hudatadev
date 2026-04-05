@@ -30,6 +30,7 @@ Route::get('/test-email', function () {
     return 'Email envoyé !';
 });
 
+Route::get('/service/{slug}', [ServiceController::class, 'show'])->name('services.show');
 
 
 Route::get('/dashboard', function () {
@@ -73,7 +74,6 @@ Route::get('/', [
     FrontHomeController::class, 'index'
 ])->name('front.home');
 Route::get('/contact', [FrontHomeController::class, 'contact'])->name('contact.index');
-Route::get('/service/{slug}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/projects', [ProjectController::class, 'frontIndex'])->name('allprojects.index');
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/pages/{slug}', [PagesController::class, 'show'])->name('pages.show');
