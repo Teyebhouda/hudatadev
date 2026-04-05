@@ -65,7 +65,7 @@ class ServiceController extends Controller
 }
 
 
-public function show($slug)
+public function showPublic($slug)
 {
     //dd($slug);
     // ✅ Récupérer directement le service via le slug
