@@ -55,7 +55,7 @@ Route::get('/pages/{id}/edit', [PagesController::class, 'edit'])->name('pages.ed
     Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 //Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
- Route::resource('services', ServiceController::class);
+Route::resource('services', ServiceController::class)->except(['show']);
    Route::post('/admin/services/batch-update', [ServiceController::class, 'batchUpdate'])->name('services.batch-update');
     //Route::resource('projects', ProjectController::class);
 
