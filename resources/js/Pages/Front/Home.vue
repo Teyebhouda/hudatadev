@@ -91,6 +91,7 @@ const parallaxStatsContent = computed(() => sections.value.ParallaxStats?.conten
 console.log('parallaxStatsContent', parallaxStatsContent.value)
 console.log('servicesitems', services.value)
 console.log('projects_items', projects.value)
+console.log('testimonialsContent', testimonialsContent.value)
 
 //scroll haut 
 const showScrollTop = ref(false)
@@ -182,13 +183,13 @@ onMounted(() => {
 
      
        <!-- <whyChooseUs :content="whyChooseUsContent" /> -->
-      <!-- <Testimonials :content="testimonialsContent"/> -->
        
       
       <Ourprojects :content="projectsContent"/>
+       
      <!-- Image flottante à gauche -->
     <div
-      class="absolute left-0 top-[30%] w-[30vw] h-[80vh] overflow-hidden rounded-r-3xl  z-0"
+      class="absolute left-0 top-[50%] w-[30vw] h-[80vh] overflow-hidden rounded-r-3xl  z-0"
     >
       <img
         src="/images/illustra_image.png"
@@ -196,8 +197,8 @@ onMounted(() => {
         class="w-full h-full object-cover opacity-70"
       />
     </div>
-      <competences />
-      <Contat_form :content="contactContent" :services="services" :initialService="selectedService" />
+      <!--  <competences /> -->
+      <Contat_form :content="contactContent" :services="services" :initialService="selectedService" :testimonials-content="testimonialsContent"/>
      
     </main>
 

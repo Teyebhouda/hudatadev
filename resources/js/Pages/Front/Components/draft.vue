@@ -1,90 +1,49 @@
 <template>
-  <section
-   id="contact-form"
-    class="relative bg-[#f0f4f8] py-28 px-6 sm:px-10 lg:px-20 overflow-hidden"
-  >
-    <!-- Background word -->
-    <h2 class="hero-bg-word">Ensemble</h2>
+  <section id="contact-form" class="relative bg-[#f0f4f8] py-28 px-6 sm:px-10 lg:px-20 overflow-visible">
+    <!-- grand mot en arrière-plan -->
+    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">Ensemble</h2>
 
-    <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-      <!-- ================= LEFT : CONTACT ================= -->
-      <div class="lg:col-span-6">
-        <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360] leading-tight">
-          Créons quelque chose ensemble
-        </p>
-
-        <div class="mt-4 flex items-center gap-6">
-          <div class="h-[2px] w-28 bg-[#c98f60]"></div>
-          <p class="text-lg text-[#5c6670] max-w-xl">
-            Partagez vos idées — ensemble, nous concevons des expériences digitales élégantes et performantes.
+    <div class="relative max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- gauche : texte principal -->
+        <div class="lg:col-span-8">
+          <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#3f5360] leading-tight">
+            Créons quelque chose ensemble
           </p>
+          <div class="mt-4 flex items-center gap-6">
+            <div class="h-[2px] w-36 bg-[#c98f60]"></div>
+            <p class="text-lg text-[#5c6670] max-w-xl">
+           Partagez vos idées — ensemble, nous concevons et développons des produits élégants qui offrent une expérience utilisateur exceptionnelle. </p>
+          </div>
+          <div class="mt-6 ml-10">
+<a
+  @click="open = true"
+  class="group inline-flex items-center gap-2
+         text-[#c98f60] font-semibold text-lg
+         cursor-pointer
+         hover:text-[#b7794f]
+         transition-colors"
+>
+  Discutons de votre projet
+  <span class="transition-transform duration-300 group-hover:translate-x-1">
+    →
+  </span>
+</a>
+</div>
+
+
         </div>
 
-        <div class="mt-8 ml-2">
-          <button
-            @click="open = true"
-            class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition"
-          >
-            Discutons de votre projet →
-          </button>
-        </div>
+       
       </div>
 
-      <!-- ================= RIGHT : TESTIMONIALS ================= -->
-      <div class="lg:col-span-6">
-        <Swiper
-          class="testimonials-swiper"
-          :modules="[Autoplay]"
-          :slides-per-view="'auto'"
-          :space-between="25"
-          :loop="true"
-          :speed="4500"
-          :autoplay="{ delay: 0, disableOnInteraction: false }"
-          :allowTouchMove="false"
-        >
-          <SwiperSlide
-            v-for="(testimonial, index) in testimonialsContent.items"
-            :key="index"
-            class="testimonial-slide"
-          >
-            <div
-              :class="[
-                'testimonial-card',
-                index % 2 === 0
-                  ? 'rotate-[2deg] hover:rotate-0'
-                  : '-rotate-[2deg] hover:rotate-0'
-              ]"
-            >
-              <div class="quote">"</div>
-
-              <div class="stars">
-                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-              </div>
-
-              <p class="message">
-                {{ testimonial.message }}
-              </p>
-
-              <div class="author">
-                <div class="avatar">
-                  <img :src="testimonial.background_image" :alt="testimonial.name" />
-                </div>
-
-                <div>
-                  <h3>{{ testimonial.name }}</h3>
-                  <span>{{ testimonial.role }}</span>
-                </div>
-              </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
+      <!-- Réseaux sociaux -->
+      <div class="mt-12 flex justify-center gap-8">
+        <!-- Les icônes restent les mêmes -->
       </div>
-
     </div>
 
-    <!-- ================= MODAL CONTACT ================= -->
-       <!-- Modal formulaire -->
+    <!-- Modal formulaire -->
     <transition name="fade-scale">
       <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center px-4">
         <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" @click="open = false" aria-hidden="true"></div>
@@ -148,26 +107,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
-import axios from "axios"
-import { Swiper, SwiperSlide } from "swiper/vue"
-import { Autoplay } from "swiper/modules"
-import "swiper/css"
+import { ref, reactive, watch } from 'vue'
+import axios from 'axios'
 import { useContactModal } from '@/Composables/useContactModal'
 const { isContactOpen } = useContactModal()
-
-
-defineProps({
-  testimonialsContent: {
-    type: Object,
-    default: () => ({
-      items: []
-    })
-  }
-})
-const open = isContactOpen
-const loading = ref(false)
-const errorText = ref('')
 
 
 const services = [
@@ -178,15 +121,27 @@ const services = [
   'Audit & consultation technique',
   'Autre'
 ]
+const open = isContactOpen
+const loading = ref(false)
+const errorText = ref('')
 
 const form = reactive({
-  nom: "",
-  email: "",
-  Téléphone: "",
-  service: "",
-  message: "",
-
+  nom: '',
+  email: '',
+  telephone: '',
+  service: '',
+  message: ''
 })
+
+function resetForm() {
+  form.nom = ''
+  form.email = ''
+  form.telephone = ''
+  form.service = ''
+  form.message = ''
+  errorText.value = ''
+}
+
 async function handleSubmit() {
   errorText.value = ''
   if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) {
@@ -208,6 +163,7 @@ async function handleSubmit() {
   }
 }
 
+
 // Toast de succès
 const showToast = ref(false)
 
@@ -219,6 +175,7 @@ function triggerToast() {
 }
 
 </script>
+
 <style scoped>
 .hero-bg-word {
   position: absolute;
@@ -228,18 +185,65 @@ function triggerToast() {
   font-size: clamp(6rem, 12vw, 10rem);
   font-weight: 800;
   color: rgba(63, 83, 96, 0.06);
+  letter-spacing: -0.02em;
+  line-height: 0.8;
   pointer-events: none;
   user-select: none;
+  z-index: 0;
+  white-space: nowrap;
 }
 
-.testimonial-slide {
-  width: 360px;
+/* inputs */
+.input {
+  background: #ffffff;
+  border: 1px solid #e6e8eb;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  color: #3f5360;
+  transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
+}
+.input:focus {
+  outline: none;
+  box-shadow: 0 6px 18px rgba(63,83,96,0.06);
+  border-color: #3f5360;
+  transform: translateY(-1px);
 }
 
-.testimonial-card {
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(16px);
-  padding: 30px;
-  border-radius: 20px;
+/* modal transition */
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: all .22s ease;
 }
+.fade-scale-enter-from { opacity: 0; transform: translateY(8px) scale(.98); }
+.fade-scale-enter-to { opacity: 1; transform: translateY(0) scale(1); }
+.fade-scale-leave-from { opacity: 1; transform: translateY(0) scale(1); }
+.fade-scale-leave-to { opacity: 0; transform: translateY(6px) scale(.98); }
+
+/* toast transition */
+/* toast animation */
+.toast-enter-active,
+.toast-leave-active {
+  transition: all .35s ease;
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(12px) scale(0.95);
+}
+
+.toast-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+}
+
 </style>

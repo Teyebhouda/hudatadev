@@ -1,76 +1,107 @@
 <template>
   <section
     id="services-section"
-    class="relative w-full overflow-hidden py-10 sm:py-14 px-6 sm:px-10 lg:px-20 bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
+    class="relative overflow-hidden py-20 lg:py-28 px-6 sm:px-10 lg:px-20
+           bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
   >
-    <!-- Mot de fond -->
-    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">
-      Services
-    </h2>
 
-    <div class="relative max-w-6xl mx-auto text-center mb-10">
-      <!-- Titre principal -->
-      <p class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[#3f5360] leading-tight">
+    <!-- Background word -->
+    <div class="hero-bg-word">Services</div>
+
+    <!-- Header -->
+    <div class="relative max-w-6xl mx-auto text-center mb-16">
+
+      <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360]">
         {{ content.title }}
       </p>
 
-      <!-- Ligne + Description -->
-      <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-        <div class="h-[1px] w-20 sm:w-32 bg-[#c98f60]/60"></div>
-        <p class="text-base sm:text-lg text-[#5c6670] max-w-2xl leading-relaxed">
+      <div class="mt-5 flex justify-center items-center gap-4">
+        <div class="h-[2px] w-24 bg-[#c98f60]"></div>
+        <p class="text-lg text-[#5c6670] max-w-2xl">
           {{ content.subtitle }}
         </p>
       </div>
+
     </div>
 
-    <!-- Cartes services -->
-    <div
-      class="relative z-10 flex flex-col sm:flex-row flex-wrap justify-center items-stretch gap-5 sm:gap-4"
-    >
-      <div
-        v-for="(service, i) in content.items"
-        :key="service.title"
-        class="group relative flex-1 min-w-[220px] max-w-[300px]  min-h-[300px] flex flex-col justify-center items-center text-center transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] overflow-hidden rounded-2xl p-5 sm:p-6 backdrop-blur-sm border border-[#d9dbdd]/60 shadow-sm"
-        :class="[ 
-          i % 2 === 0
-            ? 'bg-[#3f5360]/95 text-white hover:shadow-xl hover:scale-[1.03]'
-            : 'bg-white text-[#2f3438] hover:shadow-lg hover:scale-[1.02]'
-        ]"
-      >
-        <Icon
-          :icon="service.icon"
-          class="w-9 h-9 sm:w-10 sm:h-10 mb-2 sm:mb-3 transition-transform duration-500 group-hover:scale-110 text-[#c98f60]"
-        />
-        <h3 class="text-lg sm:text-xl font-semibold mb-2 tracking-wide">
-          {{ service.title }}
-        </h3>
-        <p class="max-w-xs mx-auto text-sm leading-relaxed opacity-90">
-          {{ service.description }}
-        </p>
-       <p
-  class="max-w-xs mx-auto text-xs leading-relaxed mt-2 opacity-70 italic line-clamp-2"
-  v-html="service.long_description"
->
+    <!-- Layout moderne -->
+    <div class="relative max-w-7xl mx-auto grid lg:grid-cols-3 gap-8 items-stretch">
 
-        </p>
-        
-        <a
-        :href="`/services/${service.slug}`"
-          class="mt-4 inline-block text-sm font-medium text-[#c98f60] underline underline-offset-4 hover:text-[#a66e40] transition-colors"
+      <!-- LEFT -->
+      <div class="space-y-6">
+
+        <div
+          v-for="(service, i) in leftServices"
+          :key="service.title"
+          class="service-card"
         >
-          En savoir plus
-        </a>
-       
+          <div class="icon-box">
+            <Icon :icon="service.icon" />
+          </div>
+
+          <div>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+          </div>
+        </div>
+
       </div>
+
+      <!-- CENTER (featured) -->
+      <div class="featured-card">
+
+        <div class="icon-big">
+          <Icon :icon="featured.icon" />
+        </div>
+
+        <h2>{{ featured.title }}</h2>
+
+        <p class="text">
+          {{ featured.description }}
+        </p>
+
+        <p class="subtext">
+          {{ featured.long_description }}
+        </p>
+
+        <a :href="`/services/${featured.slug}`" class="btn">
+          Explorer →
+        </a>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="space-y-6">
+
+        <div
+          v-for="(service, i) in rightServices"
+          :key="service.title"
+          class="service-card"
+        >
+          <div class="icon-box">
+            <Icon :icon="service.icon" />
+          </div>
+
+          <div>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+          </div>
+        </div>
+
+      </div>
+
     </div>
+
   </section>
 </template>
 
 <script setup>
+import { computed } from "vue"
 import { Icon } from "@iconify/vue"
 
-defineProps({
-  content: {
+
+const props = defineProps({
+  content: {  
     type: Object,
     default: () => ({
       title: "Mes Services",
@@ -104,26 +135,155 @@ defineProps({
     }),
   },
 })
+const featured = computed(() => props.content.items?.[0] || {})
+
+const leftServices = computed(() =>
+  props.content.items?.slice(1, 3) || []
+)
+
+const rightServices = computed(() =>
+  props.content.items?.slice(3, 5) || []
+)
 </script>
 
 <style scoped>
+
+/* Background word */
 .hero-bg-word {
   position: absolute;
   left: 50%;
   top: 8%;
   transform: translateX(-50%);
-  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-size: clamp(5rem, 12vw, 9rem);
   font-weight: 800;
   color: rgba(63, 83, 96, 0.05);
-  letter-spacing: -0.02em;
-  line-height: 0.8;
-  white-space: nowrap;
   pointer-events: none;
-  user-select: none;
-  z-index: 0;
+  white-space: nowrap;
 }
 
-.group {
-  transition: all 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+/* small cards */
+.service-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 20px;
+
+  padding: 18px;
+
+  transition: all 0.4s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+/* icon */
+.icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(201,143,96,0.1);
+  color: #c98f60;
+
+  flex-shrink: 0;
+}
+
+/* text */
+.service-card h3 {
+  font-weight: 700;
+  color: #3f5360;
+  font-size: 15px;
+}
+
+.service-card p {
+  font-size: 13px;
+  color: #5c6670;
+  margin-top: 2px;
+}
+
+/* featured card */
+.featured-card {
+  background: linear-gradient(145deg, #ffffff, #f6f7f8);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 28px;
+
+  padding: 40px;
+  text-align: center;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.08),
+    0 5px 20px rgba(201,143,96,0.08);
+
+  transition: all 0.4s ease;
+}
+
+.featured-card:hover {
+  transform: translateY(-10px);
+}
+
+.icon-big {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+
+  background: rgba(201,143,96,0.12);
+  color: #c98f60;
+  font-size: 30px;
+}
+
+.featured-card h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #3f5360;
+}
+
+.featured-card .text {
+  margin-top: 10px;
+  color: #5c6670;
+  font-size: 14px;
+}
+
+.featured-card .subtext {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(92,102,112,0.8);
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 18px;
+
+  background: #c98f60;
+  color: white;
+
+  border-radius: 999px;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #b7794f;
 }
 </style>
+
+
+

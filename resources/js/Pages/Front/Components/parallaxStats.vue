@@ -1,76 +1,87 @@
 <template>
   <section
     id="about-stats"
-    class="relative bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1] py-20 px-6 sm:px-10 lg:px-20 overflow-hidden"
-    role="region"
-    aria-labelledby="about-title"
+    class="relative overflow-hidden py-20 lg:py-28 px-6 sm:px-10 lg:px-20
+           bg-gradient-to-b from-[#f7f8f9] to-[#eef0f1]"
   >
-    <!-- Mot de fond décoratif -->
-    <h2 aria-hidden="true" class="hero-bg-word select-none pointer-events-none">
+    <!-- Mot de fond -->
+    <div class="hero-bg-word">
       Values
-    </h2>
+    </div>
 
-    <div class="relative max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center z-10">
-      <!-- Texte principal -->
-      <div class="space-y-8">
-        <p
-          id="about-title"
-          class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#3f5360] leading-tight"
-        >
+    <div class="relative max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- LEFT -->
+      <div>
+
+        <!-- Title -->
+        <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360] leading-tight">
           {{ content.title || "Notre priorité" }}
         </p>
 
-        <div class="flex items-center gap-6">
-          <div class="h-[1px] w-28 bg-[#c98f60]/70"></div>
-          <p class="text-lg text-[#5c6670] max-w-xl leading-relaxed">
-            {{ content.description || "La satisfaction de nos clients est au cœur de notre mission." }}
-          </p>
+        <!-- separator -->
+        <div class="mt-6 flex items-center gap-4">
+          <div class="h-[2px] w-24 bg-[#c98f60]"></div>
+          <div class="h-[2px] w-10 bg-[#3f5360]/20"></div>
         </div>
 
-        <!-- Statistiques -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10">
-          <div
-            v-for="(stat, index) in content.stats || []"
-            :key="index"
-            class="bg-white border border-[#d9dbdd]/60 shadow-sm rounded-2xl p-6 text-center transition-all duration-500 hover:scale-[1.03] hover:shadow-lg"
-          >
-            <h3 class="text-4xl font-extrabold text-[#3f5360] mb-1">
-              <span ref="statRefs">{{ stat.value }}</span>+
-            </h3>
-            <p class="text-[#c98f60] font-semibold text-sm uppercase tracking-wide">
-              {{ stat.label }}
-            </p>
-            <p class="text-[#5c6670]/80 text-xs mt-1 leading-relaxed">
-              {{ stat.long_description }}
-            </p>
-          </div>
-        </div>
+        <!-- description -->
+        <p class="mt-6 text-lg text-[#5c6670] max-w-xl leading-relaxed">
+          {{ content.description }}
+        </p>
 
-        <!-- Bouton CTA -->
+        <!-- CTA -->
         <div v-if="content.cta" class="mt-10">
           <a
             :href="content.cta.href"
-            class="inline-flex items-center gap-3 px-6 py-3 bg-[#3f5360] text-white rounded-full shadow-md hover:bg-[#2f3d46] transition"
+            class="inline-flex items-center gap-3 px-6 py-3 rounded-full
+                   bg-[#3f5360] text-white
+                   hover:bg-[#2f3d46]
+                   transition-all duration-300 shadow-md"
           >
             {{ content.cta.label }}
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7" />
+
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </a>
         </div>
+
       </div>
 
-      <!-- Illustration -->
-     <div
-  v-if="content.image"
-  class="relative w-full h-96 md:h-full overflow-hidden rounded-2xl shadow-xl"
->
-  <img
-    :src="content.image"
-    :alt="content.image_alt || 'Illustration valeurs Hudata Dev'"
-    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-  />
-</div>
+      <!-- RIGHT -->
+      <div class="grid sm:grid-cols-2 gap-6">
+
+        <div
+          v-for="(stat, index) in content.stats"
+          :key="index"
+          class="group bg-white/80 backdrop-blur-xl
+                 border border-white/60
+                 rounded-3xl p-8 text-center
+                 shadow-sm hover:shadow-2xl
+                 transition-all duration-500
+                 hover:-translate-y-2"
+        >
+
+          <!-- number -->
+          <h3 class="text-4xl font-extrabold text-[#3f5360] mb-2">
+            <span ref="statRefs">{{ stat.value }}</span>+
+          </h3>
+
+          <!-- label -->
+          <p class="text-[#c98f60] font-semibold text-sm uppercase tracking-wide">
+            {{ stat.label }}
+          </p>
+
+          <!-- description -->
+          <p class="text-[#5c6670]/80 text-xs mt-3 leading-relaxed">
+            {{ stat.long_description }}
+          </p>
+
+        </div>
+
+      </div>
 
     </div>
   </section>
@@ -154,28 +165,13 @@ onMounted(() => {
 .hero-bg-word {
   position: absolute;
   left: 50%;
-  top: 6%;
+  top: 8%;
   transform: translateX(-50%);
-  font-size: clamp(4rem, 9vw, 7rem);
+  font-size: clamp(5rem, 12vw, 9rem);
   font-weight: 800;
   color: rgba(63, 83, 96, 0.05);
-  letter-spacing: -0.02em;
-  line-height: 0.8;
+  white-space: nowrap;
   pointer-events: none;
   user-select: none;
-  z-index: 0;
-  white-space: nowrap;
-}
-
-.stat-card {
-  opacity: 0;
-  animation: fadeUp 0.8s ease forwards;
-}
-.stat-card:nth-child(1) { animation-delay: 0.1s; }
-.stat-card:nth-child(2) { animation-delay: 0.3s; }
-
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
 }
 </style>
