@@ -187,16 +187,16 @@ onMounted(() => {
       
       <Ourprojects :content="projectsContent"/>
        
-     <!-- Image flottante à gauche -->
+     <!-- Image flottante à gauche 
     <div
-      class="absolute left-0 top-[50%] w-[30vw] h-[80vh] overflow-hidden rounded-r-3xl  z-0"
+      class="absolute left-0 top-[52%] w-[30vw] h-[80vh] overflow-hidden rounded-r-3xl  z-10 hidden lg:block"
     >
       <img
         src="/images/illustra_image.png"
         alt="Illustration décorative"
         class="w-full h-full object-cover opacity-70"
       />
-    </div>
+    </div> -->
       <!--  <competences /> -->
       <Contat_form :content="contactContent" :services="services" :initialService="selectedService" :testimonials-content="testimonialsContent"/>
      
