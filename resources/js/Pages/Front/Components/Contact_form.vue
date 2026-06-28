@@ -1,244 +1,294 @@
-<script setup>
-import { ref, reactive, onMounted } from 'vue'
-import axios from 'axios'
-
-const open = ref(false)
-const loading = ref(false)
-const errorText = ref('')
-const success = ref(false)
-
-const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
-
-const form = reactive({
-  nom: '',
-  email: '',
-  telephone: '',
-  service: '',
-  message: '',
-
-  // security
-  website: '',       // honeypot
-  turnstile: '',     // token
-  started_at: Date.now()
-})
-
-const services = [
-  'Développement Web',
-  'Applications Mobile',
-  'API & Intégration',
-  'UI/UX Design',
-  'SEO',
-  'Maintenance'
-]
-
-function handleTurnstile(token) {
-  form.turnstile = token
-}
-
-onMounted(() => {
-  const script = document.createElement('script')
-  script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-  script.async = true
-  script.defer = true
-  document.head.appendChild(script)
-
-  window.onTurnstileSuccess = handleTurnstile
-})
-
-async function handleSubmit() {
-  errorText.value = ''
-
-  const duration = (Date.now() - form.started_at) / 1000
-
-  if (duration < 3) {
-    errorText.value = "Soumission trop rapide détectée."
-    return
-  }
-
-  if (!form.turnstile) {
-    errorText.value = "Veuillez valider la vérification de sécurité."
-    return
-  }
-
-  loading.value = true
-
-  try {
-    const res = await axios.post('/contact', form)
-
-    success.value = true
-    open.value = false
-
-    // reset
-    Object.assign(form, {
-      nom: '',
-      email: '',
-      telephone: '',
-      service: '',
-      message: '',
-      website: '',
-      turnstile: '',
-      started_at: Date.now()
-    })
-
-  } catch (e) {
-    errorText.value =
-      e?.response?.data?.message || "Erreur lors de l'envoi."
-  }
-
-  loading.value = false
-}
-</script>
-
 <template>
-<div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-  <!-- LEFT -->
-  <div class="lg:col-span-6">
-    <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360] leading-tight">
-      Créons quelque chose ensemble
-    </p>
-
-    <div class="mt-4 flex items-center gap-6">
-      <div class="h-[2px] w-28 bg-[#c98f60]"></div>
-      <p class="text-lg text-[#5c6670] max-w-xl">
-        Partagez vos idées — ensemble, nous concevons des expériences digitales élégantes et performantes.
-      </p>
-    </div>
-
-    <div class="mt-8 ml-2">
-      <button
-        @click="open = true"
-        class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition"
-      >
-        Discutons de votre projet →
-      </button>
-    </div>
-  </div>
-
-  <!-- RIGHT -->
-  <div class="lg:col-span-6">
-    <Swiper
-      :modules="[Autoplay]"
-      :slides-per-view="'auto'"
-      :space-between="25"
-      :loop="true"
-      :speed="4500"
-      :autoplay="{ delay: 0, disableOnInteraction: false }"
-      :allowTouchMove="false"
-    >
-      <SwiperSlide
-v-for="(testimonial, index) in testimonialsContent?.items || []"
-        :key="index"
-      >
-        <div
-          class="testimonial-card"
-          :class="index % 2 === 0 ? 'rotate-[2deg]' : '-rotate-[2deg]'"
-        >
-          <div class="quote">"</div>
-
-          <div class="stars">
-            ★★★★★
-          </div>
-
-          <p class="message">
-            {{ testimonial.message }}
-          </p>
-
-          <div class="author">
-            <img :src="testimonial.background_image" />
-            <div>
-              <h3>{{ testimonial.name }}</h3>
-              <span>{{ testimonial.role }}</span>
-            </div>
-          </div>
-        </div>
-      </SwiperSlide>
-    </Swiper>
-  </div>
-
-</div>
-
-<!-- MODAL -->
-<transition name="fade-scale">
-<div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center px-4">
-
-  <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" @click="open = false"></div>
-
-  <form
-    @submit.prevent="handleSubmit"
-    class="relative bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 z-10"
+  <section
+   id="contact-form"
+    class="relative bg-[#f0f4f8] py-28 px-6 sm:px-10 lg:px-20 overflow-hidden"
   >
+    <!-- Background word -->
+    <h2 class="hero-bg-word">Ensemble</h2>
 
-    <button type="button" @click="open = false" class="absolute top-4 right-4">
-      ✕
-    </button>
+    <div class="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
 
-    <h3 class="text-2xl font-bold">Envoyez un message</h3>
+      <!-- ================= LEFT : CONTACT ================= -->
+      <div class="lg:col-span-6">
+        <p class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#3f5360] leading-tight">
+          Créons quelque chose ensemble
+        </p>
 
-    <p class="text-sm text-gray-500 mb-6">
-      Réponse sous 24-48h
-    </p>
+        <div class="mt-4 flex items-center gap-6">
+          <div class="h-[2px] w-28 bg-[#c98f60]"></div>
+          <p class="text-lg text-[#5c6670] max-w-xl">
+            Partagez vos idées — ensemble, nous concevons des expériences digitales élégantes et performantes.
+          </p>
+        </div>
 
-    <!-- honeypot -->
-    <input v-model="form.website" class="hidden" autocomplete="off" />
+        <div class="mt-8 ml-2">
+          <button
+            @click="open = true"
+            class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition"
+          >
+            Discutons de votre projet →
+          </button>
+        </div>
+      </div>
 
-    <div class="grid gap-3">
+      <!-- ================= RIGHT : TESTIMONIALS ================= -->
+      <div class="lg:col-span-6">
+        <Swiper
+          class="testimonials-swiper"
+          :modules="[Autoplay]"
+          :slides-per-view="'auto'"
+          :space-between="25"
+          :loop="true"
+          :speed="4500"
+          :autoplay="{ delay: 0, disableOnInteraction: false }"
+          :allowTouchMove="false"
+        >
+          <SwiperSlide
+            v-for="(testimonial, index) in testimonialsContent.items"
+            :key="index"
+            class="testimonial-slide"
+          >
+            <div
+              :class="[
+                'testimonial-card',
+                index % 2 === 0
+                  ? 'rotate-[2deg] hover:rotate-0'
+                  : '-rotate-[2deg] hover:rotate-0'
+              ]"
+            >
+              <div class="quote">"</div>
 
-      <input v-model="form.nom" placeholder="Nom" class="input" />
-      <input v-model="form.email" placeholder="Email" class="input" />
-      <input v-model="form.telephone" placeholder="Téléphone" class="input" />
+              <div class="stars">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+              </div>
 
-      <select v-model="form.service" class="input">
-        <option value="">Service</option>
-        <option v-for="s in services" :key="s">{{ s }}</option>
-      </select>
+              <p class="message">
+                {{ testimonial.message }}
+              </p>
 
-      <textarea
-        v-model="form.message"
-        :placeholder="form.service === 'Autre'
-          ? 'Expliquez votre besoin spécifique...'
-          : 'Décrivez votre projet...'"
-        class="input"
-        rows="4"
-      />
+              <div class="author">
+                <div class="avatar">
+                  <img :src="testimonial.background_image" :alt="testimonial.name" />
+                </div>
 
-      <!-- TURNSTILE -->
-      <div
-        class="cf-turnstile"
-        :data-sitekey="turnstileSiteKey"
-        data-theme="light"
-        data-callback="onTurnstileSuccess"
-      ></div>
+                <div>
+                  <h3>{{ testimonial.name }}</h3>
+                  <span>{{ testimonial.role }}</span>
+                </div>
+              </div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </div>
 
     </div>
 
-    <div class="mt-4 flex justify-between items-center">
+    <!-- ================= MODAL CONTACT ================= -->
+       <!-- Modal formulaire -->
+    <transition name="fade-scale">
+      <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center px-4">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" @click="open = false" aria-hidden="true"></div>
 
-      <p v-if="errorText" class="text-red-500 text-sm">
-        {{ errorText }}
-      </p>
+        <form @submit.prevent="handleSubmit" class="relative bg-white w-full max-w-xl rounded-2xl shadow-2xl p-8 sm:p-10 z-10">
+          <button type="button" class="absolute right-4 top-4 text-[#5c6670] hover:text-[#3f5360]" @click="open = false" aria-label="Fermer">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
 
-      <button
-        type="submit"
-        :disabled="loading"
-        class="px-5 py-2 bg-[#3f5360] text-white rounded-full"
-      >
-        {{ loading ? 'Envoi...' : 'Envoyer' }}
-      </button>
+          <h3 class="text-2xl font-bold text-[#3f5360] mb-2">Envoyez un message</h3>
+          <p class="text-sm text-[#5c6670] mb-6">Merci de décrivez brièvement votre projet et nous vous répondrons sous 1 à 2 jours ouvrés.</p>
 
-    </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input v-model="form.nom" type="text" placeholder="Nom complet" class="input" />
+            <input v-model="form.email" type="email" placeholder="Email" class="input" />
+            <input v-model="form.telephone" type="tel" placeholder="Téléphone (facultatif)" class="input sm:col-span-2" />
+            <select v-model="form.service" class="input sm:col-span-2">
+              <option value="">Choisissez un service</option>
+              <option v-for="s in services" :key="s" :value="s">{{ s }}</option>
+            </select>
 
-  </form>
+            <textarea
+  v-model="form.message"
+  :placeholder="form.service === 'Autre'
+    ? 'Expliquez votre besoin spécifique...'
+    : 'Décrivez votre projet...'"
+  class="input sm:col-span-2"
+  rows="4"
+></textarea>
+<!-- Honeypot -->
+<input
+    v-model="form.website"
+    type="text"
+    autocomplete="off"
+    tabindex="-1"
+    class="hidden"
+/>
+
+<!-- Cloudflare Turnstile -->
+<div
+    class="cf-turnstile"
+    :data-sitekey="turnstileSiteKey"
+    data-theme="light"
+    data-callback="onTurnstileSuccess">
+</div>
 
 </div>
+
+          <div class="mt-6 flex items-center justify-between gap-4">
+            <div class="text-sm text-red-500" v-if="errorText">{{ errorText }}</div>
+            <button type="submit" :disabled="loading" class="ml-auto inline-flex items-center gap-3 px-5 py-3 bg-[#3f5360] text-white rounded-full hover:bg-[#5c6670] transition">
+              <span v-if="loading" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              {{ loading ? 'Envoi...' : 'Envoyer le message' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </transition>
+    <!-- Toast succès -->
+<transition name="toast">
+  <div
+    v-if="showToast"
+    class="fixed bottom-6 right-6 z-[60] flex items-center gap-3 bg-white border border-green-100 shadow-xl rounded-xl px-5 py-4"
+  >
+    <div class="flex items-center justify-center w-9 h-9 rounded-full bg-green-100 text-green-600">
+      ✔
+    </div>
+
+    <div>
+      <p class="font-semibold text-[#3f5360]">Message envoyé</p>
+      <p class="text-sm text-[#5c6670]">Merci pour votre message. Nous vous répondrons très bientôt.</p>
+    </div>
+  </div>
 </transition>
 
-<!-- SUCCESS -->
-<div v-if="success" class="fixed bottom-6 right-6 bg-white shadow p-4 rounded-xl">
-  <p class="font-semibold text-[#3f5360]">Message envoyé</p>
-  <p class="text-sm text-gray-500">
-    Merci pour votre message
-  </p>
-</div>
-
+  </section>
 </template>
+
+<script setup>
+import { ref, reactive } from "vue"
+import axios from "axios"
+import { Swiper, SwiperSlide } from "swiper/vue"
+import { Autoplay } from "swiper/modules"
+import "swiper/css"
+import { useContactModal } from '@/Composables/useContactModal'
+
+const { isContactOpen } = useContactModal()
+
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    const script = document.createElement('script')
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+    script.async = true
+    script.defer = true
+
+    document.head.appendChild(script)
+})
+defineProps({
+  testimonialsContent: {
+    type: Object,
+    default: () => ({
+      items: []
+    })
+  }
+})
+const open = isContactOpen
+const loading = ref(false)
+const errorText = ref('')
+
+
+const services = [
+  'Site web vitrine',
+  'Application mobile',
+  'Application web sur mesure (SaaS, dashboard)',
+  'UX / UI Design',
+  'Audit & consultation technique',
+  'Autre'
+]
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+window.onTurnstileSuccess = function (token) {
+
+    form.turnstile = token
+
+}
+const form = reactive({
+
+    nom: '',
+
+    email: '',
+
+    telephone: '',
+
+    service: '',
+
+    message: '',
+
+    website: '',
+
+    turnstile: '',
+
+    started_at: Date.now()
+
+})
+async function handleSubmit() {
+  errorText.value = ''
+  if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) {
+    errorText.value = 'Veuillez remplir le nom, l’email et le message.'
+    return
+  }
+  loading.value = true
+  try {
+    if (!form.turnstile) {
+
+    errorText.value = "Veuillez compléter la vérification de sécurité."
+
+    return
+
+}
+    await axios.post(route('contact.send'), form, {
+      headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' }
+    })
+    resetForm()
+    open.value = false
+    triggerToast()
+  } catch (e) {
+    errorText.value = "Une erreur est survenue. Veuillez réessayer."
+  } finally {
+    loading.value = false
+  }
+}
+
+// Toast de succès
+const showToast = ref(false)
+
+function triggerToast() {
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 3000)
+}
+
+</script>
+<style scoped>
+.hero-bg-word {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 800;
+  color: rgba(63, 83, 96, 0.06);
+  pointer-events: none;
+  user-select: none;
+}
+
+.testimonial-slide {
+  width: 360px;
+}
+
+.testimonial-card {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(16px);
+  padding: 30px;
+  border-radius: 20px;
+}
+</style>

@@ -54,15 +54,13 @@
           <Icon :icon="featured.icon" />
         </div>
 
-        <h2>{{ content.subtitle}}</h2>
+        <h2>Nos Expertises</h2>
 
         <p class="text">
-          {{ content.description }}
+          {{ content.subtitle }}
         </p>
 
-        <p class="subtext">
-          {{ content.long_description }}
-        </p>
+       
 
         <a :href="`/services/${featured.slug}`" class="btn">
           Explorer →
