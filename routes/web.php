@@ -77,8 +77,8 @@ Route::get('/services/{slug}', [ServiceController::class, 'showPublic'])->name('
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/pages/{slug}', [PagesController::class, 'show'])->name('pages.show');
 
-Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
-Route::post('/contact/sendcontact', [ContactController::class, 'sendcontact'])->name('contact.sendcontact');
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send')->middleware('anti-spam');
+Route::post('/contact/sendcontact', [ContactController::class, 'sendcontact'])->name('contact.sendcontact')->middleware('anti-spam');
 
 Route::get('/sitemap.xml', function () {
     $sitemap = Sitemap::create();

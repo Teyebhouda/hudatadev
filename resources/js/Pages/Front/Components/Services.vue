@@ -15,14 +15,14 @@
         {{ content.title }}
       </p>
 
-      <div class="mt-5 flex justify-center items-center gap-4">
+     <!-- <div class="mt-5 flex justify-center items-center gap-4">
         <div class="h-[2px] w-24 bg-[#c98f60]"></div>
         <p class="text-lg text-[#5c6670] max-w-2xl">
           {{ content.subtitle }}
         </p>
-      </div>
+      </div>  -->
 
-    </div>
+    </div>  
 
     <!-- Layout moderne -->
     <div class="relative max-w-7xl mx-auto grid lg:grid-cols-3 gap-8 items-stretch">
@@ -54,14 +54,14 @@
           <Icon :icon="featured.icon" />
         </div>
 
-        <h2>{{ featured.title }}</h2>
+        <h2>{{ content.subtitle}}</h2>
 
         <p class="text">
-          {{ featured.description }}
+          {{ content.description }}
         </p>
 
         <p class="subtext">
-          {{ featured.long_description }}
+          {{ content.long_description }}
         </p>
 
         <a :href="`/services/${featured.slug}`" class="btn">
