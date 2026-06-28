@@ -136,11 +136,11 @@ const props = defineProps({
 const featured = computed(() => props.content.items?.[0] || {})
 
 const leftServices = computed(() =>
-  props.content.items?.slice(1, 3) || []
+  props.content.items?.slice(0, 3) || []
 )
 
 const rightServices = computed(() =>
-  props.content.items?.slice(3, 5) || []
+  props.content.items?.slice(3, 6) || []
 )
 </script>
 
