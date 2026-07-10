@@ -23,7 +23,8 @@
 
         <div class="mt-8 ml-2">
           <button
-            @click="open = true"
+ @click="open = true"
+
             class="inline-flex items-center gap-2 text-[#c98f60] font-semibold text-lg hover:text-[#b7794f] transition"
           >
             Discutons de votre projet →
@@ -67,9 +68,9 @@
               </p>
 
               <div class="author">
-                <div class="avatar">
+                <!--<div class="avatar">
                   <img :src="testimonial.background_image" :alt="testimonial.name" />
-                </div>
+                </div> -->
 
                 <div>
                   <h3>{{ testimonial.name }}</h3>
@@ -124,12 +125,8 @@
 />
 
 <!-- Cloudflare Turnstile -->
-<div
-    class="cf-turnstile"
-    :data-sitekey="turnstileSiteKey"
-    data-theme="light"
-    data-callback="onTurnstileSuccess">
-</div>
+<!-- Cloudflare Turnstile explicit render -->
+<div ref="turnstileContainer"></div>
 
 </div>
 
@@ -164,25 +161,16 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
+import { ref, reactive, nextTick, watch } from "vue"
 import axios from "axios"
 import { Swiper, SwiperSlide } from "swiper/vue"
 import { Autoplay } from "swiper/modules"
 import "swiper/css"
 import { useContactModal } from '@/Composables/useContactModal'
 
+
 const { isContactOpen } = useContactModal()
 
-import { onMounted } from 'vue'
-
-onMounted(() => {
-    const script = document.createElement('script')
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-    script.async = true
-    script.defer = true
-
-    document.head.appendChild(script)
-})
 defineProps({
   testimonialsContent: {
     type: Object,
@@ -191,9 +179,26 @@ defineProps({
     })
   }
 })
+
+
 const open = isContactOpen
+
+
 const loading = ref(false)
 const errorText = ref('')
+const showToast = ref(false)
+
+
+const turnstileContainer = ref(null)
+const turnstileWidgetId = ref(null)
+
+
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+
+console.log(
+    "TURNSTILE SITE KEY:::",
+    turnstileSiteKey
+)
 
 
 const services = [
@@ -204,67 +209,346 @@ const services = [
   'Audit & consultation technique',
   'Autre'
 ]
-const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
-window.onTurnstileSuccess = function (token) {
 
-    form.turnstile = token
 
-}
 const form = reactive({
 
-    nom: '',
-
-    email: '',
-
-    telephone: '',
-
-    service: '',
-
-    message: '',
-
-    website: '',
-
-    turnstile: '',
-
-    started_at: Date.now()
+    nom:'',
+    email:'',
+    telephone:'',
+    service:'',
+    message:'',
+    website:'',
+    turnstile:'',
+    started_at:Date.now()
 
 })
-async function handleSubmit() {
-  errorText.value = ''
-  if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) {
-    errorText.value = 'Veuillez remplir le nom, l’email et le message.'
-    return
-  }
-  loading.value = true
-  try {
-    if (!form.turnstile) {
 
-    errorText.value = "Veuillez compléter la vérification de sécurité."
 
-    return
 
-}
-    await axios.post(route('contact.send'), form, {
-      headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' }
+watch(open, async(value)=>{
+
+    if(value){
+
+        console.log("Modal ouvert")
+
+        await nextTick()
+
+        initTurnstile()
+
+    }
+
+})
+
+
+
+// =========================
+// LOAD SCRIPT
+// =========================
+
+function loadTurnstileScript(){
+
+    return new Promise((resolve)=>{
+
+
+        if(window.turnstile){
+
+            console.log(
+                "Turnstile déjà chargé"
+            )
+
+            resolve()
+            return
+        }
+
+
+        const script=document.createElement('script')
+
+        script.src =
+        "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+
+
+        script.async=true
+        script.defer=true
+
+
+        script.onload=()=>{
+
+            console.log(
+                "Script Turnstile chargé"
+            )
+
+            console.log(
+                window.turnstile
+            )
+
+            resolve()
+
+        }
+
+
+        script.onerror=()=>{
+
+            console.error(
+                "Erreur chargement Turnstile"
+            )
+
+        }
+
+
+        document.head.appendChild(script)
+
+
     })
-    resetForm()
-    open.value = false
-    triggerToast()
-  } catch (e) {
-    errorText.value = "Une erreur est survenue. Veuillez réessayer."
-  } finally {
-    loading.value = false
-  }
+
 }
 
-// Toast de succès
-const showToast = ref(false)
 
-function triggerToast() {
-  showToast.value = true
-  setTimeout(() => {
-    showToast.value = false
-  }, 3000)
+
+
+// =========================
+// INIT TURNSTILE
+// =========================
+
+async function initTurnstile(){
+
+
+    console.log(
+        "INIT TURNSTILE"
+    )
+
+
+    if(turnstileWidgetId.value){
+
+        console.log(
+            "Widget déjà créé"
+        )
+
+        return
+
+    }
+
+
+
+    await loadTurnstileScript()
+
+
+    await nextTick()
+
+
+
+    console.log(
+        "Container:",
+        turnstileContainer.value
+    )
+
+
+    if(!turnstileContainer.value){
+
+        console.error(
+            "Container introuvable"
+        )
+
+        return
+
+    }
+
+
+
+    turnstileWidgetId.value =
+        window.turnstile.render(
+
+            turnstileContainer.value,
+
+            {
+
+
+                sitekey:turnstileSiteKey,
+
+
+                theme:"light",
+
+
+
+                callback(token){
+
+
+                    console.log(
+                        "TOKEN RECU:",
+                        token
+                    )
+
+
+                    form.turnstile = token
+
+
+                    console.log(
+                        "FORM TOKEN:",
+                        form.turnstile
+                    )
+
+
+                },
+
+
+
+                "expired-callback":()=>{
+
+
+                    console.log(
+                        "Token expiré"
+                    )
+
+
+                    form.turnstile=''
+
+
+                },
+
+
+
+                "error-callback":()=>{
+
+
+                    console.log(
+                        "Erreur Turnstile"
+                    )
+
+
+                    form.turnstile=''
+
+
+                }
+
+
+            }
+
+        )
+
+
+    console.log(
+        "Widget ID:",
+        turnstileWidgetId.value
+    )
+
+}
+
+
+
+// =========================
+// SUBMIT
+// =========================
+
+async function handleSubmit(){
+
+
+    errorText.value=''
+
+
+    console.log(
+        "SUBMIT TOKEN:",
+        form.turnstile
+    )
+
+
+    if(!form.nom.trim()
+    || !form.email.trim()
+    || !form.message.trim()){
+
+
+        errorText.value=
+        "Veuillez remplir le nom, l’email et le message."
+
+
+        return
+
+    }
+
+
+
+    if(!form.turnstile){
+
+
+        errorText.value=
+        "Veuillez compléter la vérification de sécurité."
+
+
+        return
+
+    }
+
+
+
+    loading.value=true
+
+
+    try{
+
+
+        await axios.post(
+            route('contact.send'),
+            form,
+            {
+                headers:{
+                    'X-CSRF-TOKEN':
+                    document.querySelector(
+                    'meta[name="csrf-token"]'
+                    )?.content || ''
+                }
+            }
+        )
+
+
+        showToast.value=true
+
+
+        open.value=false
+
+
+
+        if(window.turnstile){
+
+            window.turnstile.reset(
+                turnstileWidgetId.value
+            )
+
+        }
+
+
+        form.turnstile=''
+
+
+
+    }
+    catch(e){
+
+        console.error(e)
+
+        errorText.value=
+        "Une erreur est survenue."
+
+
+    }
+    finally{
+
+        loading.value=false
+
+    }
+
+}
+
+
+
+function triggerToast(){
+
+    showToast.value=true
+
+    setTimeout(()=>{
+
+        showToast.value=false
+
+    },3000)
+
 }
 
 </script>

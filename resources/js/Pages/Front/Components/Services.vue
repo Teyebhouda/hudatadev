@@ -54,10 +54,13 @@
           <Icon :icon="featured.icon" />
         </div>
 
-        <h2>Nos Expertises</h2>
+        <h2>Chez HUDATA-DEV</h2>
 
         <p class="text">
           {{ content.subtitle }}
+        </p>
+        <p>
+          {{ content.description }}
         </p>
 
        
