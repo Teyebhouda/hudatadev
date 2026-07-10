@@ -21,7 +21,7 @@ class AntiSpamMiddleware
 
         $key = 'contact:' . $ip;
 
-        if (RateLimiter::tooManyAttempts($key, 5)) {
+        if (RateLimiter::tooManyAttempts($key, 7)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Trop de requêtes, veuillez réessayer plus tard.'
