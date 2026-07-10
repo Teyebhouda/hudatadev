@@ -15,43 +15,73 @@ class AntiSpamMiddleware
 
         /*
         |--------------------------------------------------------------------------
-        | 1. RATE LIMITING (anti spam massif)
+        | 1. RATE LIMITING
         |--------------------------------------------------------------------------
         */
 
         $key = 'contact:' . $ip;
 
-        if (RateLimiter::tooManyAttempts($key, 7)) {
+        // 5 messages maximum toutes les 10 minutes
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+
             return response()->json([
                 'success' => false,
-                'message' => 'Trop de requêtes, veuillez réessayer plus tard.'
+                'message' => 'Trop de tentatives. Veuillez patienter quelques minutes.'
             ], 429);
+
         }
 
-        RateLimiter::hit($key, 3600); // 1 heure
+        RateLimiter::hit($key, 600);
+
+
 
         /*
         |--------------------------------------------------------------------------
-        | 2. BLOQUER LES LIENS (spam classique)
+        | 2. HONEYPOT
         |--------------------------------------------------------------------------
         */
 
-        $message = strtolower($request->input('message', ''));
+        if ($request->filled('website')) {
 
-        if (preg_match('/https?:\/\/|www\.|bit\.ly|t\.me|discord\.gg/i', $message)) {
             return response()->json([
-                'success' => false,
-                'message' => 'Les liens ne sont pas autorisés.'
-            ], 422);
+                'success'=>false,
+                'message'=>'Requête invalide.'
+            ],422);
+
         }
+
+
 
         /*
         |--------------------------------------------------------------------------
-        | 3. MOTS INTERDITS (spam SEO / crypto / etc.)
+        | 3. BLOQUER LES LIENS
+        |--------------------------------------------------------------------------
+        */
+
+        $message = strtolower(
+            $request->input('message','')
+        );
+
+
+        if (preg_match('/https?:\/\/|www\.|bit\.ly|t\.me|discord\.gg/i', $message)) {
+
+            return response()->json([
+                'success'=>false,
+                'message'=>'Les liens ne sont pas autorisés.'
+            ],422);
+
+        }
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 4. MOTS SPAM
         |--------------------------------------------------------------------------
         */
 
         $blockedWords = [
+
             'casino',
             'viagra',
             'crypto',
@@ -60,38 +90,62 @@ class AntiSpamMiddleware
             'loan',
             'backlinks',
             'seo service',
-            'marketing automation',
             'telegram group'
+
         ];
 
-        foreach ($blockedWords as $word) {
-            if (str_contains($message, $word)) {
+
+        foreach($blockedWords as $word){
+
+            if(str_contains($message,$word)){
+
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Contenu non autorisé détecté.'
-                ], 422);
+                    'success'=>false,
+                    'message'=>'Contenu non autorisé.'
+                ],422);
+
             }
+
         }
+
+
 
         /*
         |--------------------------------------------------------------------------
-        | 4. USER AGENT SUSPECT (bots)
+        | 5. USER AGENT BOTS
         |--------------------------------------------------------------------------
         */
 
-        $ua = strtolower($request->userAgent() ?? '');
+        $ua = strtolower(
+            $request->userAgent() ?? ''
+        );
 
-        $badAgents = ['curl', 'wget', 'python', 'httpclient'];
 
-        foreach ($badAgents as $agent) {
-            if (str_contains($ua, $agent)) {
+        $badAgents = [
+            'curl',
+            'wget',
+            'python',
+            'httpclient',
+            'postman'
+        ];
+
+
+        foreach($badAgents as $agent){
+
+            if(str_contains($ua,$agent)){
+
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Requête non autorisée.'
-                ], 403);
+                    'success'=>false,
+                    'message'=>'Requête non autorisée.'
+                ],403);
+
             }
+
         }
 
+
+
         return $next($request);
+
     }
 }

@@ -95,7 +95,7 @@ class ContactController extends Controller
 
             'email' => [
                 'required',
-                'email:rfc,dns',
+                'email:rfc',
                 'max:255'
             ],
 
