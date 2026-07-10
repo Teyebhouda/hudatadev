@@ -39,7 +39,7 @@ return [
 
     'site_key' => env('VITE_TURNSTILE_SITE_KEY'),
 
-    'secret_key' => env('TURNSTILE_SECRET_KEY'),
+    'secret_key' => env('VITE_TURNSTILE_SECRET_KEY'),
 
 ],
 

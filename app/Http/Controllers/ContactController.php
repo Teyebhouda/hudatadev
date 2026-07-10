@@ -15,6 +15,11 @@ class ContactController extends Controller
      */
     public function send(Request $request)
     {
+         dd([
+        'token' => $request->turnstile,
+        'secret' => config('services.turnstile.secret_key'),
+        'ip' => $request->ip(),
+    ]);
         // Vérification Honeypot + Turnstile
         if ($response = $this->securityChecks($request)) {
             return $response;
