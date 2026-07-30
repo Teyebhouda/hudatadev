@@ -50,9 +50,7 @@
       <!-- CENTER (featured) -->
       <div class="featured-card">
 
-        <div class="icon-big">
-          <Icon :icon="featured.icon" />
-        </div>
+       
 
         <h2>Chez HUDATA-DEV</h2>
 
@@ -79,10 +77,7 @@
           :key="service.title"
           class="service-card"
         >
-          <div class="icon-box">
-            <Icon :icon="service.icon" />
-          </div>
-
+         
           <div>
             <h3>{{ service.title }}</h3>
             <p>{{ service.description }}</p>
